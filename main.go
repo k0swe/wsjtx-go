@@ -23,6 +23,8 @@ func main() {
 			fmt.Println("Decode:", message)
 		case wsjtx.ClearMessage:
 			fmt.Println("Clear:", message)
+		case wsjtx.QsoLoggedMessage:
+			fmt.Println("QSO Logged:", message)
 		default:
 			fmt.Println("Other:", reflect.TypeOf(message), message)
 		}

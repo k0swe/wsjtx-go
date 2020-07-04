@@ -2,10 +2,12 @@ package wsjtx
 
 import (
 	"encoding/binary"
+	"github.com/leemcloughlin/jdn"
 	"log"
 	"math"
 	"net"
 	"reflect"
+	"time"
 )
 
 type HeartbeatMessage struct {
@@ -54,6 +56,26 @@ type DecodeMessage struct {
 
 type ClearMessage struct {
 	Id string `json:"id"`
+}
+
+type QsoLoggedMessage struct {
+	Id               string `json:"id"`
+	DateTimeOff      time.Time
+	DxCall           string
+	DxGrid           string
+	TxFrequency      uint64
+	Mode             string
+	ReportSent       string
+	ReportReceived   string
+	TxPower          string
+	Comments         string
+	Name             string
+	DateTimeOn       time.Time
+	OperatorCall     string
+	MyCall           string
+	MyGrid           string
+	ExchangeSent     string
+	ExchangeReceived string
 }
 
 const Magic = 0xadbccbda
@@ -127,7 +149,9 @@ func ParseMessage(buffer []byte, length int) interface{} {
 		p.checkParse(clear)
 		return clear
 	case 5:
-		log.Printf("WSJT-X QsoLog isn't implemented yet: %v\n", string(p.buffer[p.cursor:]))
+		qsoLogged := p.parseQsoLogged()
+		p.checkParse(qsoLogged)
+		return qsoLogged
 	case 6:
 		log.Printf("WSJT-X Close isn't implemented yet: %v\n", string(p.buffer[p.cursor:]))
 	case 10:
@@ -238,6 +262,45 @@ func (p *parser) parseClear() ClearMessage {
 	}
 }
 
+func (p *parser) parseQsoLogged() QsoLoggedMessage {
+	id := p.parseUtf8()
+	timeOff := p.parseQDateTime()
+	dxCall := p.parseUtf8()
+	dxGrid := p.parseUtf8()
+	txFrequency := p.parseUint64()
+	mode := p.parseUtf8()
+	reportSent := p.parseUtf8()
+	reportReceived := p.parseUtf8()
+	txPower := p.parseUtf8()
+	comments := p.parseUtf8()
+	name := p.parseUtf8()
+	timeOn := p.parseQDateTime()
+	operatorCall := p.parseUtf8()
+	myCall := p.parseUtf8()
+	myGrid := p.parseUtf8()
+	exchangeSent := p.parseUtf8()
+	exchangeReceived := p.parseUtf8()
+	return QsoLoggedMessage{
+		Id:               id,
+		DateTimeOff:      timeOff,
+		DxCall:           dxCall,
+		DxGrid:           dxGrid,
+		TxFrequency:      txFrequency,
+		Mode:             mode,
+		ReportSent:       reportSent,
+		ReportReceived:   reportReceived,
+		TxPower:          txPower,
+		Comments:         comments,
+		Name:             name,
+		DateTimeOn:       timeOn,
+		OperatorCall:     operatorCall,
+		MyCall:           myCall,
+		MyGrid:           myGrid,
+		ExchangeSent:     exchangeSent,
+		ExchangeReceived: exchangeReceived,
+	}
+}
+
 func (p *parser) parseUint8() uint8 {
 	value := p.buffer[p.cursor]
 	p.cursor += 1
@@ -283,5 +346,29 @@ func (p *parser) parseFloat64() float64 {
 func (p *parser) parseBool() bool {
 	value := p.buffer[p.cursor] != 0
 	p.cursor += 1
+	return value
+}
+
+func (p *parser) parseQDateTime() time.Time {
+	julianDay := p.parseUint64()
+	year, month, day := jdn.FromNumber(int(julianDay))
+	msSinceMidnight := int(p.parseUint32())
+	hour := msSinceMidnight / 3600000
+	msSinceMidnight -= hour * 3600000
+	minute := msSinceMidnight / 60000
+	msSinceMidnight -= minute * 60000
+	second := msSinceMidnight / 1000
+	timespec := p.parseUint8()
+	var value time.Time
+	switch timespec {
+	case 0:
+		// local
+		value = time.Date(year, month, day, hour, minute, second, 0, time.Local)
+	case 1:
+		// UTC
+		value = time.Date(year, month, day, hour, minute, second, 0, time.UTC)
+	default:
+		log.Fatalln("WSJT-X parser: Got a timespec I wasn't expecting,", timespec)
+	}
 	return value
 }
