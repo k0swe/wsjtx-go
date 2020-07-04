@@ -123,7 +123,9 @@ func ParseMessage(buffer []byte, length int) interface{} {
 		p.checkParse(decode)
 		return decode
 	case 3:
-		log.Printf("WSJT-X Clear isn't implemented yet: %v\n", string(p.buffer[p.cursor:]))
+		clear := p.parseClear()
+		p.checkParse(clear)
+		return clear
 	case 5:
 		log.Printf("WSJT-X QsoLog isn't implemented yet: %v\n", string(p.buffer[p.cursor:]))
 	case 6:
@@ -226,6 +228,13 @@ func (p *parser) parseDecode() DecodeMessage {
 		Message:          message,
 		LowConfidence:    lowConfidence,
 		OffAir:           offAir,
+	}
+}
+
+func (p *parser) parseClear() ClearMessage {
+	id := p.parseUtf8()
+	return ClearMessage{
+		Id: id,
 	}
 }
 

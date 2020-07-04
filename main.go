@@ -21,6 +21,8 @@ func main() {
 			fmt.Println("Status:", message)
 		case wsjtx.DecodeMessage:
 			fmt.Println("Decode:", message)
+		case wsjtx.ClearMessage:
+			fmt.Println("Clear:", message)
 		default:
 			fmt.Println("Other:", reflect.TypeOf(message), message)
 		}
