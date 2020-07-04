@@ -57,6 +57,7 @@ type ClearMessage struct {
 }
 
 const Magic = 0xadbccbda
+const BufLen = 256
 
 type parser struct {
 	buffer []byte
@@ -75,7 +76,7 @@ func ListenToWsjtx(c chan interface{}) {
 	conn, err := net.ListenMulticastUDP("udp", nil, addr)
 	check(err)
 	for {
-		b := make([]byte, 256)
+		b := make([]byte, BufLen)
 		length, _, err := conn.ReadFromUDP(b)
 		check(err)
 		message := ParseMessage(b, length)
@@ -170,37 +171,36 @@ func (p *parser) parseStatus() StatusMessage {
 	txDf := p.parseUint32()
 	deCall := p.parseUtf8()
 	deGrid := p.parseUtf8()
-	//TODO: the UDP packets I'm getting don't match the rest of this...
-	//dxGrid := p.parseUtf8()
-	//txWatchdog := p.parseBool()
-	//subMode := p.parseUtf8()
-	//fastMode := p.parseBool()
-	//specialMode := p.parseUint8()
-	//freqTolerance := p.parseUint32()
-	//trPeriod := p.parseUint32()
-	//configName := p.parseUtf8()
+	dxGrid := p.parseUtf8()
+	txWatchdog := p.parseBool()
+	subMode := p.parseUtf8()
+	fastMode := p.parseBool()
+	specialMode := p.parseUint8()
+	freqTolerance := p.parseUint32()
+	trPeriod := p.parseUint32()
+	configName := p.parseUtf8()
 	return StatusMessage{
-		Id:            id,
-		DialFrequency: dialFreq,
-		Mode:          mode,
-		DxCall:        dxCall,
-		Report:        report,
-		TxMode:        txMode,
-		TxEnabled:     txEnabled,
-		Transmitting:  transmitting,
-		Decoding:      decoding,
-		RxDF:          rxDf,
-		TxDF:          txDf,
-		DeCall:        deCall,
-		DeGrid:        deGrid,
-		//DxGrid:               dxGrid,
-		//TxWatchdog:           txWatchdog,
-		//SubMode:              subMode,
-		//FastMode:             fastMode,
-		//SpecialOperationMode: specialMode,
-		//FrequencyTolerance:   freqTolerance,
-		//TRPeriod:             trPeriod,
-		//ConfigurationName:    configName,
+		Id:                   id,
+		DialFrequency:        dialFreq,
+		Mode:                 mode,
+		DxCall:               dxCall,
+		Report:               report,
+		TxMode:               txMode,
+		TxEnabled:            txEnabled,
+		Transmitting:         transmitting,
+		Decoding:             decoding,
+		RxDF:                 rxDf,
+		TxDF:                 txDf,
+		DeCall:               deCall,
+		DeGrid:               deGrid,
+		DxGrid:               dxGrid,
+		TxWatchdog:           txWatchdog,
+		SubMode:              subMode,
+		FastMode:             fastMode,
+		SpecialOperationMode: specialMode,
+		FrequencyTolerance:   freqTolerance,
+		TRPeriod:             trPeriod,
+		ConfigurationName:    configName,
 	}
 }
 
@@ -237,6 +237,10 @@ func (p *parser) parseUint8() uint8 {
 
 func (p *parser) parseUtf8() string {
 	strlen := int(p.parseUint32())
+	if strlen == 0xffffffff {
+		// this is a sentinel value meaning "null" in QDataStream, but Golang can't have nil strings
+		strlen = 0
+	}
 	value := string(p.buffer[p.cursor:(p.cursor + strlen)])
 	p.cursor += strlen
 	return value
