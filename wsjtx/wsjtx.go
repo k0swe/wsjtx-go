@@ -2,10 +2,10 @@ package wsjtx
 
 import (
 	"encoding/binary"
-	"fmt"
 	"log"
 	"math"
 	"net"
+	"reflect"
 )
 
 type HeartbeatMessage struct {
@@ -99,7 +99,7 @@ func ParseMessage(buffer []byte, length int) interface{} {
 	p := parser{buffer: buffer, length: length, cursor: 0}
 	magic := p.parseUint32()
 	if magic != Magic {
-		log.Println("Bad packet")
+		// Packet is not speaking the WSJT-X protocol
 		return nil
 	}
 	schema := p.parseUint32()
@@ -111,39 +111,36 @@ func ParseMessage(buffer []byte, length int) interface{} {
 	switch messageType {
 	case 0:
 		heartbeat := p.parseHeartbeat()
-		if p.cursor != p.length {
-			log.Printf("Parsing WSJT-X Heartbeat: There were %d bytes left over\n", p.length-p.cursor)
-		}
+		p.checkParse(heartbeat)
 		return heartbeat
 	case 1:
 		status := p.parseStatus()
-		if p.cursor != p.length {
-			log.Printf("Parsing WSJT-X Status: There were %d bytes left over\n", p.length-p.cursor)
-		}
+		p.checkParse(status)
 		return status
 	case 2:
 		decode := p.parseDecode()
-		if p.cursor != p.length {
-			log.Printf("Parsing WSJT-X Decode: There were %d bytes left over\n", p.length-p.cursor)
-		}
+		p.checkParse(decode)
 		return decode
 	case 3:
-		fmt.Print("clear: ")
-		fmt.Println(string(p.buffer[p.cursor:]))
+		log.Printf("WSJT-X Clear isn't implemented yet: %v\n", string(p.buffer[p.cursor:]))
 	case 5:
-		fmt.Print("qso log: ")
-		fmt.Println(string(p.buffer[p.cursor:]))
+		log.Printf("WSJT-X QsoLog isn't implemented yet: %v\n", string(p.buffer[p.cursor:]))
 	case 6:
-		fmt.Print("close: ")
-		fmt.Println(string(p.buffer[p.cursor:]))
+		log.Printf("WSJT-X Close isn't implemented yet: %v\n", string(p.buffer[p.cursor:]))
 	case 10:
-		fmt.Print("wspr decode: ")
-		fmt.Println(string(p.buffer[p.cursor:]))
+		log.Printf("WSJT-X WSPR Decode isn't implemented yet: %v\n", string(p.buffer[p.cursor:]))
 	case 12:
-		fmt.Print("logged adif: ")
-		fmt.Println(string(p.buffer[p.cursor:]))
+		log.Printf("WSJT-X LoggedAdif isn't implemented yet: %v\n", string(p.buffer[p.cursor:]))
 	}
 	return nil
+}
+
+// Quick sanity check that we parsed all of the message bytes
+func (p *parser) checkParse(message interface{}) {
+	if p.cursor != p.length {
+		log.Printf("Parsing WSJT-X %s: There were %d bytes left over\n",
+			reflect.TypeOf(message).Name(), p.length-p.cursor)
+	}
 }
 
 func (p *parser) parseHeartbeat() HeartbeatMessage {
