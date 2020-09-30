@@ -1,4 +1,4 @@
-module github.com/xylo04/wsjtx-go
+module github.com/k0swe/wsjtx-go
 
 go 1.14
 
