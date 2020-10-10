@@ -308,13 +308,13 @@ func (p *parser) parseUint8() uint8 {
 }
 
 func (p *parser) parseUtf8() string {
-	strlen := int(p.parseUint32())
-	if strlen == 0xffffffff {
+	strlen := p.parseUint32()
+	if strlen == uint32(0xffffffff) {
 		// this is a sentinel value meaning "null" in QDataStream, but Golang can't have nil strings
 		strlen = 0
 	}
-	value := string(p.buffer[p.cursor:(p.cursor + strlen)])
-	p.cursor += strlen
+	value := string(p.buffer[p.cursor:(p.cursor + int(strlen))])
+	p.cursor += int(strlen)
 	return value
 }
 
