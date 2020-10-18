@@ -14,5 +14,5 @@
     "group:monorepos",
     "group:recommended",
     "helpers:disableTypesNodeMajor"
-  ],
+  ]
 }
