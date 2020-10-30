@@ -82,6 +82,20 @@ type CloseMessage struct {
 	Id string `json:"id"`
 }
 
+type WSPRDecodeMessage struct {
+	Id        string  `json:"id"`
+	New       bool    `json:"new"`
+	Time      uint32  `json:"time"`
+	Snr       int32   `json:"snr"`
+	DeltaTime float64 `json:"deltaTime"`
+	Frequency uint64  `json:"frequency"`
+	Drift     int32   `json:"drift"`
+	Callsign  string  `json:"callsign"`
+	Grid      string  `json:"grid"`
+	Power     int32   `json:"power"`
+	OffAir    bool    `json:"offAir"`
+}
+
 type LoggedAdifMessage struct {
 	Id   string `json:"id"`
 	Adif string `json:"adif"`
@@ -166,7 +180,9 @@ func ParseMessage(buffer []byte, length int) interface{} {
 		p.checkParse(closeMsg)
 		return closeMsg
 	case 10:
-		log.Printf("WSJT-X WSPR Decode isn't implemented yet: %v\n", string(p.buffer[p.cursor:]))
+		wspr := p.parseWsprDecode()
+		p.checkParse(wspr)
+		return wspr
 	case 12:
 		loggedAdif := p.parseLoggedAdif()
 		p.checkParse(loggedAdif)
@@ -318,6 +334,33 @@ func (p *parser) parseClose() interface{} {
 	id := p.parseUtf8()
 	return CloseMessage{
 		Id: id,
+	}
+}
+
+func (p *parser) parseWsprDecode() interface{} {
+	id := p.parseUtf8()
+	newDecode := p.parseBool()
+	decodeTime := p.parseUint32()
+	snr := p.parseInt32()
+	deltaTime := p.parseFloat64()
+	frequency := p.parseUint64()
+	drift := p.parseInt32()
+	callsign := p.parseUtf8()
+	grid := p.parseUtf8()
+	power := p.parseInt32()
+	offAir := p.parseBool()
+	return WSPRDecodeMessage{
+		Id:        id,
+		New:       newDecode,
+		Time:      decodeTime,
+		Snr:       snr,
+		DeltaTime: deltaTime,
+		Frequency: frequency,
+		Drift:     drift,
+		Callsign:  callsign,
+		Grid:      grid,
+		Power:     power,
+		OffAir:    offAir,
 	}
 }
 

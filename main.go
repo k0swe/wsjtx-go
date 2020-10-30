@@ -27,6 +27,8 @@ func main() {
 			fmt.Println("QSO Logged:", message)
 		case wsjtx.CloseMessage:
 			fmt.Println("Close:", message)
+		case wsjtx.WSPRDecodeMessage:
+			fmt.Println("WSPR Decode:", message)
 		case wsjtx.LoggedAdifMessage:
 			fmt.Println("Logged Adif:", message)
 		default:
