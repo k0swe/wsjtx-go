@@ -101,6 +101,12 @@ func TestParseMessage(t *testing.T) {
 				ExchangeSent:     "1B",
 				ExchangeReceived: "1D",
 			},
+		}, {
+			name: "Parse Close",
+			args: argsFrom(`adbccbda00000002000000060000000657534a542d58`),
+			want: CloseMessage{
+				Id: "WSJT-X",
+			},
 		},
 	}
 	for _, tt := range tests {

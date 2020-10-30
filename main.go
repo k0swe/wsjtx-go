@@ -25,6 +25,8 @@ func main() {
 			fmt.Println("Clear:", message)
 		case wsjtx.QsoLoggedMessage:
 			fmt.Println("QSO Logged:", message)
+		case wsjtx.CloseMessage:
+			fmt.Println("Close:", message)
 		default:
 			fmt.Println("Other:", reflect.TypeOf(message), message)
 		}

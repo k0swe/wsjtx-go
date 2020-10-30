@@ -78,6 +78,10 @@ type QsoLoggedMessage struct {
 	ExchangeReceived string    `json:"exchangeReceived"`
 }
 
+type CloseMessage struct {
+	Id string `json:"id"`
+}
+
 const Magic = 0xadbccbda
 const BufLen = 256
 
@@ -153,7 +157,9 @@ func ParseMessage(buffer []byte, length int) interface{} {
 		p.checkParse(qsoLogged)
 		return qsoLogged
 	case 6:
-		log.Printf("WSJT-X Close isn't implemented yet: %v\n", string(p.buffer[p.cursor:]))
+		closeMsg := p.parseClose()
+		p.checkParse(closeMsg)
+		return closeMsg
 	case 10:
 		log.Printf("WSJT-X WSPR Decode isn't implemented yet: %v\n", string(p.buffer[p.cursor:]))
 	case 12:
@@ -298,6 +304,13 @@ func (p *parser) parseQsoLogged() QsoLoggedMessage {
 		MyGrid:           myGrid,
 		ExchangeSent:     exchangeSent,
 		ExchangeReceived: exchangeReceived,
+	}
+}
+
+func (p *parser) parseClose() interface{} {
+	id := p.parseUtf8()
+	return CloseMessage{
+		Id: id,
 	}
 }
 
