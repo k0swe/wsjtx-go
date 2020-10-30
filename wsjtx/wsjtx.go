@@ -82,8 +82,13 @@ type CloseMessage struct {
 	Id string `json:"id"`
 }
 
+type LoggedAdifMessage struct {
+	Id   string `json:"id"`
+	Adif string `json:"adif"`
+}
+
 const Magic = 0xadbccbda
-const BufLen = 256
+const BufLen = 1024
 
 type parser struct {
 	buffer []byte
@@ -163,7 +168,9 @@ func ParseMessage(buffer []byte, length int) interface{} {
 	case 10:
 		log.Printf("WSJT-X WSPR Decode isn't implemented yet: %v\n", string(p.buffer[p.cursor:]))
 	case 12:
-		log.Printf("WSJT-X LoggedAdif isn't implemented yet: %v\n", string(p.buffer[p.cursor:]))
+		loggedAdif := p.parseLoggedAdif()
+		p.checkParse(loggedAdif)
+		return loggedAdif
 	}
 	return nil
 }
@@ -311,6 +318,15 @@ func (p *parser) parseClose() interface{} {
 	id := p.parseUtf8()
 	return CloseMessage{
 		Id: id,
+	}
+}
+
+func (p *parser) parseLoggedAdif() interface{} {
+	id := p.parseUtf8()
+	adif := p.parseUtf8()
+	return LoggedAdifMessage{
+		Id:   id,
+		Adif: adif,
 	}
 }
 
