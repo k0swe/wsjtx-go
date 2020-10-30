@@ -59,23 +59,23 @@ type ClearMessage struct {
 }
 
 type QsoLoggedMessage struct {
-	Id               string `json:"id"`
-	DateTimeOff      time.Time
-	DxCall           string
-	DxGrid           string
-	TxFrequency      uint64
-	Mode             string
-	ReportSent       string
-	ReportReceived   string
-	TxPower          string
-	Comments         string
-	Name             string
-	DateTimeOn       time.Time
-	OperatorCall     string
-	MyCall           string
-	MyGrid           string
-	ExchangeSent     string
-	ExchangeReceived string
+	Id               string    `json:"id"`
+	DateTimeOff      time.Time `json:"dateTimeOff"`
+	DxCall           string    `json:"dxCall"`
+	DxGrid           string    `json:"dxGrid"`
+	TxFrequency      uint64    `json:"txFrequency"`
+	Mode             string    `json:"mode"`
+	ReportSent       string    `json:"reportSent"`
+	ReportReceived   string    `json:"reportReceived"`
+	TxPower          string    `json:"txPower"`
+	Comments         string    `json:"comments"`
+	Name             string    `json:"name"`
+	DateTimeOn       time.Time `json:"dateTimeOn"`
+	OperatorCall     string    `json:"operatorCall"`
+	MyCall           string    `json:"myCall"`
+	MyGrid           string    `json:"myGrid"`
+	ExchangeSent     string    `json:"exchangeSent"`
+	ExchangeReceived string    `json:"exchangeReceived"`
 }
 
 const Magic = 0xadbccbda
@@ -233,7 +233,7 @@ func (p *parser) parseStatus() StatusMessage {
 func (p *parser) parseDecode() DecodeMessage {
 	id := p.parseUtf8()
 	newDecode := p.parseBool()
-	time := p.parseUint32()
+	decodeTime := p.parseUint32()
 	snr := p.parseInt32()
 	deltaTime := p.parseFloat64()
 	deltaFreq := p.parseUint32()
@@ -244,7 +244,7 @@ func (p *parser) parseDecode() DecodeMessage {
 	return DecodeMessage{
 		Id:               id,
 		New:              newDecode,
-		Time:             time,
+		Time:             decodeTime,
 		Snr:              snr,
 		DeltaTimeSec:     deltaTime,
 		DeltaFrequencyHz: deltaFreq,
