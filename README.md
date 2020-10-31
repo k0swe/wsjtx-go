@@ -12,5 +12,5 @@ integration. WSJT-X must be running and generating UDP packets for the driver to
 From this directory:
 
 ```shell script
-go run main.go
+go run cmd/main.go
 ```

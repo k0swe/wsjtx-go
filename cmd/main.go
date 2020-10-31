@@ -4,7 +4,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/k0swe/wsjtx-go/wsjtx"
+	"github.com/k0swe/wsjtx-go"
 	"reflect"
 )
 
