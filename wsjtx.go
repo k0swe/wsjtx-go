@@ -91,12 +91,19 @@ This message is  send when all prior "Decode"  messages in the
 "Band Activity"  window have been discarded  and therefore are
 no long available for actioning  with a "Reply" message.
 
+The Window  argument  can be  one  of the  following values:
+
+	0  - clear the "Band Activity" window (default)
+	1  - clear the "Rx Frequency" window
+	2  - clear both "Band Activity" and "Rx Frequency" windows
+
 Out/In.
 
 https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l232
 */
 type ClearMessage struct {
-	Id string `json:"id"`
+	Id     string `json:"id"`
+	Window uint8  `json:"window"` // In only
 }
 
 /*
@@ -178,15 +185,11 @@ type LoggedAdifMessage struct {
 const Magic = 0xadbccbda
 const BufLen = 1024
 
-type parser struct {
-	buffer []byte
-	length int
-	cursor int
+type Server struct {
+	conn *net.UDPConn
 }
 
-// Goroutine which will listen on a UDP port for messages from WSJT-X. When heard, the messages are
-// parsed and then placed in the given channel.
-func ListenToWsjtx(c chan interface{}) {
+func MakeServer() Server {
 	// TODO: make address and port customizable?
 	musticastAddr := "224.0.0.1"
 	wsjtxPort := "2237"
@@ -194,11 +197,22 @@ func ListenToWsjtx(c chan interface{}) {
 	check(err)
 	conn, err := net.ListenMulticastUDP("udp", nil, addr)
 	check(err)
+	return Server{conn}
+}
+
+func (s *Server) Clear() {
+	// TODO
+	//s.conn.Write();
+}
+
+// Goroutine which will listen on a UDP port for messages from WSJT-X. When heard, the messages are
+// parsed and then placed in the given channel.
+func (s *Server) ListenToWsjtx(c chan interface{}) {
 	for {
 		b := make([]byte, BufLen)
-		length, _, err := conn.ReadFromUDP(b)
+		length, _, err := s.conn.ReadFromUDP(b)
 		check(err)
-		message := ParseMessage(b, length)
+		message := parseMessage(b, length)
 		if message != nil {
 			c <- message
 		}
@@ -211,11 +225,17 @@ func check(err error) {
 	}
 }
 
+type parser struct {
+	buffer []byte
+	length int
+	cursor int
+}
+
 // Parse messages following the interface laid out in
 // https://sourceforge.net/p/wsjt/wsjtx/ci/master/tree/Network/NetworkMessage.hpp. This only parses
 // "Out" or "In/Out" message types and does not include "In" types because they will never be
 // received by WSJT-X.
-func ParseMessage(buffer []byte, length int) interface{} {
+func parseMessage(buffer []byte, length int) interface{} {
 	p := parser{buffer: buffer, length: length, cursor: 0}
 	magic := p.parseUint32()
 	if magic != Magic {

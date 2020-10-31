@@ -11,7 +11,8 @@ import (
 func main() {
 	fmt.Println("Listening for WSJT-X...")
 	c := make(chan interface{}, 5)
-	go wsjtx.ListenToWsjtx(c)
+	server := wsjtx.MakeServer()
+	go server.ListenToWsjtx(c)
 	for {
 		message := <-c
 		switch message.(type) {
