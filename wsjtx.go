@@ -2,6 +2,7 @@ package wsjtx
 
 import (
 	"encoding/binary"
+	"fmt"
 	"github.com/leemcloughlin/jdn"
 	"log"
 	"math"
@@ -187,6 +188,7 @@ const BufLen = 1024
 
 type Server struct {
 	conn *net.UDPConn
+	id   string
 }
 
 func MakeServer() Server {
@@ -197,12 +199,30 @@ func MakeServer() Server {
 	check(err)
 	conn, err := net.ListenMulticastUDP("udp", nil, addr)
 	check(err)
-	return Server{conn}
+	return Server{conn, "WSJT-X"}
 }
 
-func (s *Server) Clear() {
+func (s *Server) Clear(bandActivity bool, rxFrequency bool) error {
+	if !bandActivity && !rxFrequency {
+		return nil
+	}
+	var window uint8
+	if bandActivity && rxFrequency {
+		window = 2
+	} else if bandActivity {
+		window = 0
+	} else if rxFrequency {
+		window = 1
+	}
+
+	msg := ClearMessage{
+		Id:     s.id,
+		Window: window,
+	}
+	fmt.Printf("Pretend I'm sending Clear:%v", msg)
 	// TODO
 	//s.conn.Write();
+	return nil
 }
 
 // Goroutine which will listen on a UDP port for messages from WSJT-X. When heard, the messages are
