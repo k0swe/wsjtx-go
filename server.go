@@ -41,7 +41,7 @@ func (s *Server) Clear(bandActivity bool, rxFrequency bool) error {
 		Id:     s.id,
 		Window: window,
 	}
-	fmt.Printf("Pretend I'm sending Clear:%v", msg)
+	fmt.Printf("Pretend I'm sending Clear:%v\n", msg)
 	// TODO
 	//s.conn.Write();
 	return nil
