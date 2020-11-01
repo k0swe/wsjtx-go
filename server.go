@@ -1,7 +1,7 @@
 package wsjtx
 
 import (
-	"fmt"
+	"encoding/hex"
 	"net"
 )
 
@@ -41,18 +41,18 @@ func (s *Server) ListenToWsjtx(c chan interface{}) {
 // Send a message to WSJT-X to clear the band activity window, the RX frequency
 // window, or both.
 func (s *Server) Clear(msg ClearMessage) error {
-	fmt.Printf("Pretend I'm sending Clear: %v\n", msg)
-	// TODO
-	//s.conn.Write();
-	return nil
+	// TODO: encode the given message
+	msgBytes, _ := hex.DecodeString("adbccbda00000002000000030000000657534a542d5802")
+	_, err := s.conn.Write(msgBytes)
+	return err
 }
 
 // Send a message to WSJT-X to close the program.
 func (s *Server) Close(msg CloseMessage) error {
-	fmt.Printf("Pretend I'm sending Close: %v\n", msg)
-	// TODO
-	//s.conn.Write();
-	return nil
+	// TODO: encode the given message
+	msgBytes, _ := hex.DecodeString("adbccbda00000002000000060000000657534a542d58")
+	_, err := s.conn.Write(msgBytes)
+	return err
 }
 
 func check(err error) {
