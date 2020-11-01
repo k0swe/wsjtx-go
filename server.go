@@ -10,9 +10,9 @@ const BufLen = 1024
 
 type Server struct {
 	conn *net.UDPConn
-	id   string
 }
 
+// Create a UDP connection to communicate with WSJT-X.
 func MakeServer() Server {
 	// TODO: make address and port customizable?
 	musticastAddr := "224.0.0.1"
@@ -21,33 +21,10 @@ func MakeServer() Server {
 	check(err)
 	conn, err := net.ListenMulticastUDP("udp", nil, addr)
 	check(err)
-	return Server{conn, "WSJT-X"}
+	return Server{conn}
 }
 
-func (s *Server) Clear(bandActivity bool, rxFrequency bool) error {
-	if !bandActivity && !rxFrequency {
-		return nil
-	}
-	var window uint8
-	if bandActivity && rxFrequency {
-		window = 2
-	} else if bandActivity {
-		window = 0
-	} else if rxFrequency {
-		window = 1
-	}
-
-	msg := ClearMessage{
-		Id:     s.id,
-		Window: window,
-	}
-	fmt.Printf("Pretend I'm sending Clear:%v\n", msg)
-	// TODO
-	//s.conn.Write();
-	return nil
-}
-
-// Goroutine which will listen on a UDP port for messages from WSJT-X. When heard, the messages are
+// Goroutine to listen for messages from WSJT-X. When heard, the messages are
 // parsed and then placed in the given channel.
 func (s *Server) ListenToWsjtx(c chan interface{}) {
 	for {
@@ -59,6 +36,23 @@ func (s *Server) ListenToWsjtx(c chan interface{}) {
 			c <- message
 		}
 	}
+}
+
+// Send a message to WSJT-X to clear the band activity window, the RX frequency
+// window, or both.
+func (s *Server) Clear(msg ClearMessage) error {
+	fmt.Printf("Pretend I'm sending Clear: %v\n", msg)
+	// TODO
+	//s.conn.Write();
+	return nil
+}
+
+// Send a message to WSJT-X to close the program.
+func (s *Server) Close(msg CloseMessage) error {
+	fmt.Printf("Pretend I'm sending Close: %v\n", msg)
+	// TODO
+	//s.conn.Write();
+	return nil
 }
 
 func check(err error) {
