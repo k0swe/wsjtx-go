@@ -73,6 +73,16 @@ func handleServerMessage(message interface{}) {
 func handleCommand(command string, wsjtxServer wsjtx.Server) {
 	var err error
 	switch command {
+
+	case "hb":
+		fmt.Println("Sending Heartbeat")
+		err = wsjtxServer.Heartbeat(wsjtx.HeartbeatMessage{
+			Id:        "wsjtx-go",
+			MaxSchema: 2,
+			Version:   "0.3.1",
+			Revision:  "e0d45c929",
+		})
+
 	case "clear":
 		fmt.Println("Sending Clear")
 		err = wsjtxServer.Clear(wsjtx.ClearMessage{Id: "WSJT-X", Window: 2})

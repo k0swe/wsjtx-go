@@ -5,6 +5,16 @@ import (
 	"encoding/binary"
 )
 
+func encodeHeartbeat(msg HeartbeatMessage) ([]byte, error) {
+	e := newEncoder()
+	e.encodeUint32(heartbeatNum)
+	e.encodeUtf8(msg.Id)
+	e.encodeUint32(msg.MaxSchema)
+	e.encodeUtf8(msg.Version)
+	e.encodeUtf8(msg.Revision)
+	return e.finish()
+}
+
 func encodeClear(msg ClearMessage) ([]byte, error) {
 	e := newEncoder()
 	e.encodeUint32(clearNum)

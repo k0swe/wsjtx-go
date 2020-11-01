@@ -41,6 +41,13 @@ func (s *Server) ListenToWsjtx(c chan interface{}) {
 	}
 }
 
+// Send a heartbeat message to WSJT-X.
+func (s *Server) Heartbeat(msg HeartbeatMessage) error {
+	msgBytes, _ := encodeHeartbeat(msg)
+	_, err := s.conn.WriteTo(msgBytes, s.remoteAddr)
+	return err
+}
+
 // Send a message to WSJT-X to clear the band activity window, the RX frequency
 // window, or both.
 func (s *Server) Clear(msg ClearMessage) error {
