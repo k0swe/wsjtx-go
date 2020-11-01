@@ -9,7 +9,8 @@ const Magic = 0xadbccbda
 const BufLen = 1024
 
 type Server struct {
-	conn *net.UDPConn
+	conn       *net.UDPConn
+	remoteAddr *net.UDPAddr
 }
 
 // Create a UDP connection to communicate with WSJT-X.
@@ -21,7 +22,7 @@ func MakeServer() Server {
 	check(err)
 	conn, err := net.ListenMulticastUDP("udp", nil, addr)
 	check(err)
-	return Server{conn}
+	return Server{conn, nil}
 }
 
 // Goroutine to listen for messages from WSJT-X. When heard, the messages are
@@ -29,8 +30,9 @@ func MakeServer() Server {
 func (s *Server) ListenToWsjtx(c chan interface{}) {
 	for {
 		b := make([]byte, BufLen)
-		length, _, err := s.conn.ReadFromUDP(b)
+		length, rAddr, err := s.conn.ReadFromUDP(b)
 		check(err)
+		s.remoteAddr = rAddr
 		message := parseMessage(b, length)
 		if message != nil {
 			c <- message
@@ -43,9 +45,7 @@ func (s *Server) ListenToWsjtx(c chan interface{}) {
 func (s *Server) Clear(msg ClearMessage) error {
 	// TODO: encode the given message
 	msgBytes, _ := hex.DecodeString("adbccbda00000002000000030000000657534a542d5802")
-	addr, err := net.ResolveUDPAddr("udp", "127.0.0.1:2237")
-	check(err)
-	_, err = s.conn.WriteTo(msgBytes, addr)
+	_, err := s.conn.WriteTo(msgBytes, s.remoteAddr)
 	return err
 }
 
@@ -53,9 +53,7 @@ func (s *Server) Clear(msg ClearMessage) error {
 func (s *Server) Close(msg CloseMessage) error {
 	// TODO: encode the given message
 	msgBytes, _ := hex.DecodeString("adbccbda00000002000000060000000657534a542d58")
-	addr, err := net.ResolveUDPAddr("udp", "127.0.0.1:2237")
-	check(err)
-	_, err = s.conn.WriteTo(msgBytes, addr)
+	_, err := s.conn.WriteTo(msgBytes, s.remoteAddr)
 	return err
 }
 
