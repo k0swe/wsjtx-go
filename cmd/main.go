@@ -71,11 +71,17 @@ func handleServerMessage(message interface{}) {
 
 // When we get a command from stdin, send WSJT-X a message.
 func handleCommand(command string, wsjtxServer wsjtx.Server) {
+	var err error
 	switch command {
 	case "clear":
-		_ = wsjtxServer.Clear(wsjtx.ClearMessage{Id: "WSJT-X", Window: 2})
+		fmt.Println("Sending Clear")
+		err = wsjtxServer.Clear(wsjtx.ClearMessage{Id: "WSJT-X", Window: 2})
 
 	case "close":
-		_ = wsjtxServer.Close(wsjtx.CloseMessage{Id: "WSJT-X"})
+		fmt.Println("Sending Close")
+		err = wsjtxServer.Close(wsjtx.CloseMessage{Id: "WSJT-X"})
+	}
+	if err != nil {
+		fmt.Println(err)
 	}
 }
