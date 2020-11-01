@@ -22,46 +22,46 @@ type parser struct {
 func parseMessage(buffer []byte, length int) interface{} {
 	p := parser{buffer: buffer, length: length, cursor: 0}
 	magic := p.parseUint32()
-	if magic != Magic {
+	if magic != magic {
 		// Packet is not speaking the WSJT-X protocol
 		return nil
 	}
-	schema := p.parseUint32()
-	if schema != 2 {
-		log.Println("Got a schema version I wasn't expecting:", schema)
+	sch := p.parseUint32()
+	if sch != schema {
+		log.Println("Got a schema version I wasn't expecting:", sch)
 	}
 
 	messageType := p.parseUint32()
 	switch messageType {
-	case 0:
+	case heartbeatNum:
 		heartbeat := p.parseHeartbeat()
 		p.checkParse(heartbeat)
 		return heartbeat
-	case 1:
+	case statusNum:
 		status := p.parseStatus()
 		p.checkParse(status)
 		return status
-	case 2:
+	case decodeNum:
 		decode := p.parseDecode()
 		p.checkParse(decode)
 		return decode
-	case 3:
+	case clearNum:
 		clear := p.parseClear()
 		p.checkParse(clear)
 		return clear
-	case 5:
+	case qsoLoggedNum:
 		qsoLogged := p.parseQsoLogged()
 		p.checkParse(qsoLogged)
 		return qsoLogged
-	case 6:
+	case closeNum:
 		closeMsg := p.parseClose()
 		p.checkParse(closeMsg)
 		return closeMsg
-	case 10:
+	case wsprDecodeNum:
 		wspr := p.parseWsprDecode()
 		p.checkParse(wspr)
 		return wspr
-	case 12:
+	case loggedAdifNum:
 		loggedAdif := p.parseLoggedAdif()
 		p.checkParse(loggedAdif)
 		return loggedAdif
@@ -259,7 +259,7 @@ func (p *parser) parseUint8() uint8 {
 
 func (p *parser) parseUtf8() string {
 	strlen := p.parseUint32()
-	if strlen == uint32(0xffffffff) {
+	if strlen == uint32(qDataStreamNull) {
 		// this is a sentinel value meaning "null" in QDataStream, but Golang can't have nil strings
 		strlen = 0
 	}

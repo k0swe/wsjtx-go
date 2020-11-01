@@ -21,6 +21,8 @@ type HeartbeatMessage struct {
 	Revision  string `json:"revision"`
 }
 
+const heartbeatNum = 0
+
 /*
 WSJT-X  sends this  status message  when various  internal state
 changes to allow the server to  track the relevant state of each
@@ -54,6 +56,8 @@ type StatusMessage struct {
 	ConfigurationName    string `json:"configName"`
 }
 
+const statusNum = 1
+
 /*
 The decode message is sent when  a new decode is completed, in
 this case the 'New' field is true. It is also used in response
@@ -78,6 +82,8 @@ type DecodeMessage struct {
 	OffAir           bool    `json:"offAir"`
 }
 
+const decodeNum = 2
+
 /*
 This message is  send when all prior "Decode"  messages in the
 "Band Activity"  window have been discarded  and therefore are
@@ -97,6 +103,8 @@ type ClearMessage struct {
 	Id     string `json:"id"`
 	Window uint8  `json:"window"` // In only
 }
+
+const clearNum = 3
 
 /*
 The QSO logged message is sent when the WSJT-X user accepts the "Log  QSO" dialog by clicking
@@ -126,6 +134,8 @@ type QsoLoggedMessage struct {
 	ExchangeReceived string    `json:"exchangeReceived"`
 }
 
+const qsoLoggedNum = 5
+
 /*
 Close is  sent by  a client immediately  prior to  it shutting
 down gracefully.
@@ -137,6 +147,8 @@ https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp
 type CloseMessage struct {
 	Id string `json:"id"`
 }
+
+const closeNum = 6
 
 /*
 The decode message is sent when  a new decode is completed, in
@@ -160,6 +172,8 @@ type WSPRDecodeMessage struct {
 	OffAir    bool    `json:"offAir"`
 }
 
+const wsprDecodeNum = 10
+
 /*
 The  logged ADIF  message is  sent to  the server(s)  when the
 WSJT-X user accepts the "Log  QSO" dialog by clicking the "OK"
@@ -173,3 +187,5 @@ type LoggedAdifMessage struct {
 	Id   string `json:"id"`
 	Adif string `json:"adif"`
 }
+
+const loggedAdifNum = 12
