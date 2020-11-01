@@ -71,6 +71,13 @@ func (s *Server) Close(msg CloseMessage) error {
 	return err
 }
 
+// Send a message to WSJT-X to replay QSOs in the Band Activity window.
+func (s *Server) Replay(msg ReplayMessage) error {
+	msgBytes, _ := encodeReplay(msg)
+	_, err := s.conn.WriteTo(msgBytes, s.remoteAddr)
+	return err
+}
+
 func check(err error) {
 	if err != nil {
 		panic(err)

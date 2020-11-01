@@ -90,6 +90,11 @@ func handleCommand(command string, wsjtxServer wsjtx.Server) {
 	case "close":
 		fmt.Println("Sending Close")
 		err = wsjtxServer.Close(wsjtx.CloseMessage{Id: "WSJT-X"})
+
+	case "replay":
+		fmt.Println("Sending Replay")
+		err = wsjtxServer.Replay(wsjtx.ReplayMessage{Id: "WSJT-X"})
+
 	}
 	if err != nil {
 		fmt.Println(err)

@@ -147,3 +147,35 @@ func Test_encodeClose(t *testing.T) {
 		})
 	}
 }
+
+func Test_encodeReplay(t *testing.T) {
+	type args struct {
+		msg ReplayMessage
+	}
+	wantBin, _ := hex.DecodeString("adbccbda00000002000000070000000657534a542d58")
+	tests := []struct {
+		name    string
+		args    args
+		want    []byte
+		wantErr bool
+	}{
+		{
+			name:    "encodeReplay",
+			args:    args{msg: ReplayMessage{"WSJT-X"}},
+			want:    wantBin,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := encodeReplay(tt.args.msg)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("encodeReplay() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("encodeReplay() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

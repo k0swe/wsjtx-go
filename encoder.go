@@ -46,6 +46,13 @@ func encodeClose(msg CloseMessage) ([]byte, error) {
 	return e.finish()
 }
 
+func encodeReplay(msg ReplayMessage) ([]byte, error) {
+	e := newEncoder()
+	e.encodeUint32(replayNum)
+	e.encodeUtf8(msg.Id)
+	return e.finish()
+}
+
 type encoder struct {
 	buf *bytes.Buffer
 }

@@ -178,6 +178,23 @@ type CloseMessage struct {
 const closeNum = 6
 
 /*
+When a server starts it may  be useful for it to determine the
+state  of preexisting  clients. Sending  this message  to each
+client as it is discovered  will cause that client (WSJT-X) to
+send a "Decode" message for each decode currently in its "Band
+activity"  window.
+
+In only.
+
+https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l326
+*/
+type ReplayMessage struct {
+	Id string `json:"id"`
+}
+
+const replayNum = 7
+
+/*
 The decode message is sent when  a new decode is completed, in
 this case the 'New' field is true.
 
