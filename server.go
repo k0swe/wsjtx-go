@@ -56,6 +56,14 @@ func (s *Server) Clear(msg ClearMessage) error {
 	return err
 }
 
+// Initiate a reply to an earlier decode. The decode message must have started
+// with CQ or QRZ.
+func (s *Server) Reply(msg ReplyMessage) error {
+	msgBytes, _ := encodeReply(msg)
+	_, err := s.conn.WriteTo(msgBytes, s.remoteAddr)
+	return err
+}
+
 // Send a message to WSJT-X to close the program.
 func (s *Server) Close(msg CloseMessage) error {
 	msgBytes, _ := encodeClose(msg)

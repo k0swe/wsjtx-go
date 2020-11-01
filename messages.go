@@ -107,6 +107,33 @@ type ClearMessage struct {
 const clearNum = 3
 
 /*
+In order for a server  to provide a useful cooperative service
+to WSJT-X it  is possible for it to initiate  a QSO by sending
+this message to a client. WSJT-X filters this message and only
+acts upon it  if the message exactly describes  a prior decode
+and that decode  is a CQ or QRZ message.   The action taken is
+exactly equivalent to the user  double clicking the message in
+the "Band activity" window.
+
+In only.
+
+https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l253
+*/
+type ReplyMessage struct {
+	Id               string  `json:"id"`
+	Time             uint32  `json:"time"`
+	Snr              int32   `json:"snr"`
+	DeltaTimeSec     float64 `json:"deltaTime"`
+	DeltaFrequencyHz uint32  `json:"deltaFrequency"`
+	Mode             string  `json:"mode"`
+	Message          string  `json:"message"`
+	LowConfidence    bool    `json:"lowConfidence"`
+	Modifiers        uint8   `json:"modifiers"`
+}
+
+const replyNum = 4
+
+/*
 The QSO logged message is sent when the WSJT-X user accepts the "Log  QSO" dialog by clicking
 the "OK" button.
 

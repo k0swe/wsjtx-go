@@ -32,11 +32,11 @@ func Test_encodeHeartbeat(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := encodeHeartbeat(tt.args.msg)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("encodeClear() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("encodeHeartbeat() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("encodeClear() got = %v, want %v", got, tt.want)
+				t.Errorf("encodeHeartbeat() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -69,6 +69,48 @@ func Test_encodeClear(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("encodeClear() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_encodeReply(t *testing.T) {
+	type args struct {
+		msg ReplyMessage
+	}
+	wantBin, _ := hex.DecodeString("adbccbda00000002000000040000000657534a542d580259baf8fffffffb3fc99999a000000000000516000000017e0000000e4a4132454a50204e3442502037330000")
+	tests := []struct {
+		name    string
+		args    args
+		want    []byte
+		wantErr bool
+	}{
+		{
+			name: "encodeReply",
+			args: args{msg: ReplyMessage{
+				Id:               "WSJT-X",
+				Time:             39435000,
+				Snr:              -5,
+				DeltaTimeSec:     0.20000000298023224,
+				DeltaFrequencyHz: 1302,
+				Mode:             "~",
+				Message:          "JA2EJP N4BP 73",
+				LowConfidence:    false,
+				Modifiers:        0,
+			}},
+			want:    wantBin,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := encodeReply(tt.args.msg)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("encodeReply() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("encodeReply() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
