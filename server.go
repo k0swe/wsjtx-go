@@ -2,6 +2,7 @@ package wsjtx
 
 import (
 	"encoding/hex"
+	"fmt"
 	"net"
 )
 
@@ -45,6 +46,7 @@ func (s *Server) ListenToWsjtx(c chan interface{}) {
 func (s *Server) Clear(msg ClearMessage) error {
 	// TODO: encode the given message
 	msgBytes, _ := hex.DecodeString("adbccbda00000002000000030000000657534a542d5802")
+	fmt.Printf("Sending Clear with %d bytes to %v\n", len(msgBytes), s.remoteAddr)
 	_, err := s.conn.WriteTo(msgBytes, s.remoteAddr)
 	return err
 }
@@ -53,6 +55,7 @@ func (s *Server) Clear(msg ClearMessage) error {
 func (s *Server) Close(msg CloseMessage) error {
 	// TODO: encode the given message
 	msgBytes, _ := hex.DecodeString("adbccbda00000002000000060000000657534a542d58")
+	fmt.Printf("Sending Close with %d bytes to %v\n", len(msgBytes), s.remoteAddr)
 	_, err := s.conn.WriteTo(msgBytes, s.remoteAddr)
 	return err
 }
