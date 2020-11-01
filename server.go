@@ -43,7 +43,9 @@ func (s *Server) ListenToWsjtx(c chan interface{}) {
 func (s *Server) Clear(msg ClearMessage) error {
 	// TODO: encode the given message
 	msgBytes, _ := hex.DecodeString("adbccbda00000002000000030000000657534a542d5802")
-	_, err := s.conn.Write(msgBytes)
+	addr, err := net.ResolveUDPAddr("udp", "127.0.0.1:2237")
+	check(err)
+	_, err = s.conn.WriteTo(msgBytes, addr)
 	return err
 }
 
@@ -51,7 +53,9 @@ func (s *Server) Clear(msg ClearMessage) error {
 func (s *Server) Close(msg CloseMessage) error {
 	// TODO: encode the given message
 	msgBytes, _ := hex.DecodeString("adbccbda00000002000000060000000657534a542d58")
-	_, err := s.conn.Write(msgBytes)
+	addr, err := net.ResolveUDPAddr("udp", "127.0.0.1:2237")
+	check(err)
+	_, err = s.conn.WriteTo(msgBytes, addr)
 	return err
 }
 
