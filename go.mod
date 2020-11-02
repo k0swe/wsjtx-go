@@ -2,4 +2,4 @@ module github.com/k0swe/wsjtx-go
 
 go 1.14
 
-require github.com/leemcloughlin/jdn v0.0.0-20150602162803-c1be12110f24
+require github.com/leemcloughlin/jdn v0.0.0-20201102080031-6f88db6a6bf2
