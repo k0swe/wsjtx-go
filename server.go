@@ -92,6 +92,13 @@ func (s *Server) FreeText(msg FreeTextMessage) error {
 	return err
 }
 
+// Send a message to WSJT-X to set this station's Maidenhead grid.
+func (s *Server) Location(msg LocationMessage) error {
+	msgBytes, _ := encodeLocation(msg)
+	_, err := s.conn.WriteTo(msgBytes, s.remoteAddr)
+	return err
+}
+
 func check(err error) {
 	if err != nil {
 		panic(err)

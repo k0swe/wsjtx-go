@@ -257,6 +257,24 @@ type WSPRDecodeMessage struct {
 const wsprDecodeNum = 10
 
 /*
+This  message allows  the server  to set  the current  current
+geographical location  of operation. The supplied  location is
+not persistent but  is used as a  session lifetime replacement
+loction that overrides the Maidenhead  grid locater set in the
+application  settings.
+
+In only.
+
+https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l404
+*/
+type LocationMessage struct {
+	Id       string `json:"id"`
+	Location string `json:"location"`
+}
+
+const locationNum = 11
+
+/*
 The  logged ADIF  message is  sent to  the server(s)  when the
 WSJT-X user accepts the "Log  QSO" dialog by clicking the "OK"
 button.

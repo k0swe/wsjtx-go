@@ -70,6 +70,14 @@ func encodeFreeText(msg FreeTextMessage) ([]byte, error) {
 	return e.finish()
 }
 
+func encodeLocation(msg LocationMessage) ([]byte, error) {
+	e := newEncoder()
+	e.encodeUint32(locationNum)
+	e.encodeUtf8(msg.Id)
+	e.encodeUtf8(msg.Location)
+	return e.finish()
+}
+
 type encoder struct {
 	buf *bytes.Buffer
 }

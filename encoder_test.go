@@ -243,3 +243,35 @@ func Test_encodeFreeText(t *testing.T) {
 		})
 	}
 }
+
+func Test_encodeLocation(t *testing.T) {
+	type args struct {
+		msg LocationMessage
+	}
+	wantBin, _ := hex.DecodeString("adbccbda000000020000000b0000000657534a542d5800000006444d37396875")
+	tests := []struct {
+		name    string
+		args    args
+		want    []byte
+		wantErr bool
+	}{
+		{
+			name:    "encodeLocation",
+			args:    args{msg: LocationMessage{"WSJT-X", "DM79hu"}},
+			want:    wantBin,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := encodeLocation(tt.args.msg)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("encodeLocation() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("encodeLocation() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
