@@ -1,3 +1,5 @@
+![Test](https://github.com/k0swe/wsjtx-go/workflows/Test/badge.svg?branch=main)
+
 # wsjtx-go
 
 Golang binding for the WSJT-X amateur radio software's UDP communication interface. This library
