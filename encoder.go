@@ -61,6 +61,15 @@ func encodeHaltTx(msg HaltTxMessage) ([]byte, error) {
 	return e.finish()
 }
 
+func encodeFreeText(msg FreeTextMessage) ([]byte, error) {
+	e := newEncoder()
+	e.encodeUint32(freeTextNum)
+	e.encodeUtf8(msg.Id)
+	e.encodeUtf8(msg.Text)
+	e.encodeBool(msg.Send)
+	return e.finish()
+}
+
 type encoder struct {
 	buf *bytes.Buffer
 }

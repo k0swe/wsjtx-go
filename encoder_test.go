@@ -211,3 +211,35 @@ func Test_encodeHaltTx(t *testing.T) {
 		})
 	}
 }
+
+func Test_encodeFreeText(t *testing.T) {
+	type args struct {
+		msg FreeTextMessage
+	}
+	wantBin, _ := hex.DecodeString("adbccbda00000002000000090000000657534a542d5800000010f09f988a20646520f09f87baf09f87b801")
+	tests := []struct {
+		name    string
+		args    args
+		want    []byte
+		wantErr bool
+	}{
+		{
+			name:    "encodeFreeText",
+			args:    args{msg: FreeTextMessage{"WSJT-X", "😊 de 🇺🇸", true}},
+			want:    wantBin,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := encodeFreeText(tt.args.msg)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("encodeFreeText() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("encodeFreeText() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

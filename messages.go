@@ -211,6 +211,28 @@ type HaltTxMessage struct {
 const haltTxNum = 8
 
 /*
+This message  allows the server  to set the current  free text
+message content. Sending this  message with a non-empty "Text"
+field is equivalent to typing  a new message (old contents are
+discarded) in to  the WSJT-X free text message  field or "Tx5"
+field (both  are updated) and if  the "Send" flag is  set then
+clicking the "Now" radio button for the "Tx5" field if tab one
+is current or clicking the "Free  msg" radio button if tab two
+is current.
+
+In only.
+
+https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l350
+*/
+type FreeTextMessage struct {
+	Id   string `json:"id"`
+	Text string `json:"text"`
+	Send bool   `json:"send"`
+}
+
+const freeTextNum = 9
+
+/*
 The decode message is sent when  a new decode is completed, in
 this case the 'New' field is true.
 

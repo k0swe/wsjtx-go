@@ -85,6 +85,13 @@ func (s *Server) HaltTx(msg HaltTxMessage) error {
 	return err
 }
 
+// Send a message to WSJT-X to set the free text.
+func (s *Server) FreeText(msg FreeTextMessage) error {
+	msgBytes, _ := encodeFreeText(msg)
+	_, err := s.conn.WriteTo(msgBytes, s.remoteAddr)
+	return err
+}
+
 func check(err error) {
 	if err != nil {
 		panic(err)
