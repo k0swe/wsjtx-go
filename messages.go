@@ -305,3 +305,30 @@ type SwitchConfigurationMessage struct {
 }
 
 const switchConfigurationNum = 14
+
+/*
+The server  may send  this message at  any time.   The message
+specifies  various  configuration  options.  For  utf8  string
+fields an empty value implies no change, for the quint32 Rx DF
+and  Frequency  Tolerance  fields the  maximum  quint32  value
+implies  no change.   Invalid or  unrecognized values  will be
+silently ignored.
+
+In only.
+
+https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l477
+*/
+type ConfigureMessage struct {
+	Id                 string `json:"id"`
+	Mode               string `json:"mode"`
+	FrequencyTolerance uint32 `json:"frequencyTolerance"`
+	Submode            string `json:"submode"`
+	FastMode           bool   `json:"fastMode"`
+	TRPeriod           uint32 `json:"trPeriod"`
+	RxDF               uint32 `json:"rxDF"`
+	DXCall             string `json:"dxCall"`
+	DXGrid             string `json:"dxGrid"`
+	GenerateMessages   bool   `json:"generateMessages"`
+}
+
+const configureNum = 15

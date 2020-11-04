@@ -86,6 +86,22 @@ func encodeSwitchConfiguration(msg SwitchConfigurationMessage) ([]byte, error) {
 	return e.finish()
 }
 
+func encodeConfigure(msg ConfigureMessage) ([]byte, error) {
+	e := newEncoder()
+	e.encodeUint32(configureNum)
+	e.encodeUtf8(msg.Id)
+	e.encodeUtf8(msg.Mode)
+	e.encodeUint32(msg.FrequencyTolerance)
+	e.encodeUtf8(msg.Submode)
+	e.encodeBool(msg.FastMode)
+	e.encodeUint32(msg.TRPeriod)
+	e.encodeUint32(msg.RxDF)
+	e.encodeUtf8(msg.DXCall)
+	e.encodeUtf8(msg.DXGrid)
+	e.encodeBool(msg.GenerateMessages)
+	return e.finish()
+}
+
 type encoder struct {
 	buf *bytes.Buffer
 }

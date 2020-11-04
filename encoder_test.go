@@ -307,3 +307,46 @@ func Test_encodeSwitchConfiguration(t *testing.T) {
 		})
 	}
 }
+
+func Test_encodeConfigure(t *testing.T) {
+	type args struct {
+		msg ConfigureMessage
+	}
+	wantBin, _ := hex.DecodeString("adbccbda000000020000000f0000000657534a542d580000000346543400000023ffffffff010000003c000003e80000000454335354000000044a4b373301")
+	tests := []struct {
+		name    string
+		args    args
+		want    []byte
+		wantErr bool
+	}{
+		{
+			name: "encodeConfigure",
+			args: args{msg: ConfigureMessage{
+				Id:                 "WSJT-X",
+				Mode:               "FT4",
+				FrequencyTolerance: 35,
+				Submode:            "",
+				FastMode:           true,
+				TRPeriod:           60,
+				RxDF:               1000,
+				DXCall:             "T3ST",
+				DXGrid:             "JK73",
+				GenerateMessages:   true,
+			}},
+			want:    wantBin,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := encodeConfigure(tt.args.msg)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("encodeConfigure() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("encodeConfigure() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
