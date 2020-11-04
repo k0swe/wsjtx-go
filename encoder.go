@@ -78,6 +78,14 @@ func encodeLocation(msg LocationMessage) ([]byte, error) {
 	return e.finish()
 }
 
+func encodeSwitchConfiguration(msg SwitchConfigurationMessage) ([]byte, error) {
+	e := newEncoder()
+	e.encodeUint32(switchConfigurationNum)
+	e.encodeUtf8(msg.Id)
+	e.encodeUtf8(msg.ConfigurationName)
+	return e.finish()
+}
+
 type encoder struct {
 	buf *bytes.Buffer
 }

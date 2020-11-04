@@ -289,3 +289,19 @@ type LoggedAdifMessage struct {
 }
 
 const loggedAdifNum = 12
+
+/*
+The server  may send  this message at  any time.   The message
+specifies the name of the  configuration to switch to. The new
+configuration must exist.
+
+In only.
+
+https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l468
+*/
+type SwitchConfigurationMessage struct {
+	Id                string `json:"id"`
+	ConfigurationName string `json:"configurationName"`
+}
+
+const switchConfigurationNum = 14

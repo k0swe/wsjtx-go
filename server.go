@@ -99,6 +99,13 @@ func (s *Server) Location(msg LocationMessage) error {
 	return err
 }
 
+// Send a message to WSJT-X to switch to a different pre-defined configuration.
+func (s *Server) SwitchConfiguration(msg SwitchConfigurationMessage) error {
+	msgBytes, _ := encodeSwitchConfiguration(msg)
+	_, err := s.conn.WriteTo(msgBytes, s.remoteAddr)
+	return err
+}
+
 func check(err error) {
 	if err != nil {
 		panic(err)

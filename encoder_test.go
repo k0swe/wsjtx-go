@@ -275,3 +275,35 @@ func Test_encodeLocation(t *testing.T) {
 		})
 	}
 }
+
+func Test_encodeSwitchConfiguration(t *testing.T) {
+	type args struct {
+		msg SwitchConfigurationMessage
+	}
+	wantBin, _ := hex.DecodeString("adbccbda000000020000000e0000000657534a542d58000000184d79416c7465726e617465436f6e66696775726174696f6e")
+	tests := []struct {
+		name    string
+		args    args
+		want    []byte
+		wantErr bool
+	}{
+		{
+			name:    "encodeSwitchConfiguration",
+			args:    args{msg: SwitchConfigurationMessage{"WSJT-X", "MyAlternateConfiguration"}},
+			want:    wantBin,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := encodeSwitchConfiguration(tt.args.msg)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("encodeSwitchConfiguration() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("encodeSwitchConfiguration() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
