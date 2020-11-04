@@ -3,6 +3,7 @@ package wsjtx
 import (
 	"bytes"
 	"encoding/binary"
+	"image/color"
 	"math"
 )
 
@@ -78,6 +79,17 @@ func encodeLocation(msg LocationMessage) ([]byte, error) {
 	return e.finish()
 }
 
+func encodeHighlightCallsign(msg HighlightCallsignMessage) ([]byte, error) {
+	e := newEncoder()
+	e.encodeUint32(highlightCallsignNum)
+	e.encodeUtf8(msg.Id)
+	e.encodeUtf8(msg.Callsign)
+	e.encodeColor(msg.BackgroundColor)
+	e.encodeColor(msg.ForegroundColor)
+	e.encodeBool(msg.HighlightLast)
+	return e.finish()
+}
+
 func encodeSwitchConfiguration(msg SwitchConfigurationMessage) ([]byte, error) {
 	e := newEncoder()
 	e.encodeUint32(switchConfigurationNum)
@@ -118,6 +130,12 @@ func (e encoder) encodeUint8(num uint8) {
 	e.buf.WriteByte(num)
 }
 
+func (e encoder) encodeUint16(num uint16) {
+	bin := make([]byte, 2)
+	binary.BigEndian.PutUint16(bin, num)
+	e.buf.Write(bin)
+}
+
 func (e encoder) encodeUint32(num uint32) {
 	bin := make([]byte, 4)
 	binary.BigEndian.PutUint32(bin, num)
@@ -155,6 +173,25 @@ func (e encoder) encodeUtf8(str string) {
 	}
 	e.encodeUint32(strlen)
 	e.buf.WriteString(str)
+}
+
+func (e encoder) encodeColor(color color.Color) {
+	// TODO: the invalid color
+
+	// Spec enum: https://github.com/radekp/qt/blob/b881d8fb/src/gui/painting/qcolor.h#L70
+	const rgbSpec = 1
+	const pad = 0
+
+	// pre-multiplied to range 0x0 to 0xffff
+	r, g, b, a := color.RGBA()
+
+	// Field type and order: https://github.com/radekp/qt/blob/b881d8fb/src/gui/painting/qcolor.cpp#L2506
+	e.encodeUint8(rgbSpec)
+	e.encodeUint16(uint16(a))
+	e.encodeUint16(uint16(r))
+	e.encodeUint16(uint16(g))
+	e.encodeUint16(uint16(b))
+	e.encodeUint16(uint16(pad))
 }
 
 func (e encoder) finish() ([]byte, error) {

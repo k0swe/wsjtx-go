@@ -1,6 +1,9 @@
 package wsjtx
 
-import "time"
+import (
+	"image/color"
+	"time"
+)
 
 /*
 The heartbeat  message shall be  sent on a periodic  basis every
@@ -289,6 +292,28 @@ type LoggedAdifMessage struct {
 }
 
 const loggedAdifNum = 12
+
+/*
+The server  may send  this message at  any time.   The message
+specifies  the background  and foreground  color that  will be
+used  to  highlight  the  specified callsign  in  the  decoded
+messages  printed  in the  Band  Activity  panel. To clear
+and  cancel  highlighting send  an  invalid  QColor value  for
+either or both  of the background and  foreground fields.
+
+In only.
+
+https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l442
+*/
+type HighlightCallsignMessage struct {
+	Id              string      `json:"id"`
+	Callsign        string      `json:"callsign"`
+	BackgroundColor color.Color `json:"backgroundColor"`
+	ForegroundColor color.Color `json:"foregroundColor"`
+	HighlightLast   bool        `json:"highlightLast"`
+}
+
+const highlightCallsignNum = 13
 
 /*
 The server  may send  this message at  any time.   The message

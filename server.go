@@ -99,6 +99,13 @@ func (s *Server) Location(msg LocationMessage) error {
 	return err
 }
 
+// Send a message to WSJT-X to set callsign highlighting.
+func (s *Server) HighlightCallsign(msg HighlightCallsignMessage) error {
+	msgBytes, _ := encodeHighlightCallsign(msg)
+	_, err := s.conn.WriteTo(msgBytes, s.remoteAddr)
+	return err
+}
+
 // Send a message to WSJT-X to switch to a different pre-defined configuration.
 func (s *Server) SwitchConfiguration(msg SwitchConfigurationMessage) error {
 	msgBytes, _ := encodeSwitchConfiguration(msg)
