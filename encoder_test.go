@@ -295,8 +295,22 @@ func Test_encodeHighlightCallsign(t *testing.T) {
 				BackgroundColor: color.RGBA{R: 0xeb, G: 0x40, B: 0x34, A: 0xff},
 				ForegroundColor: color.RGBA{R: 0x25, G: 0x27, B: 0x2e, A: 0xff},
 				HighlightLast:   true,
+				Reset:           false,
 			}},
 			want:    decodeHex("adbccbda000000020000000d0000000657534a542d58000000064b4d3441434b01ffffebeb40403434000001ffff252527272e2e000001"),
+			wantErr: false,
+		},
+		{
+			name: "encodeHighlightCallsign_reset",
+			args: args{msg: HighlightCallsignMessage{
+				Id:              "WSJT-X",
+				Callsign:        "KM4ACK",
+				BackgroundColor: color.RGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xff},
+				ForegroundColor: color.RGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xff},
+				HighlightLast:   false,
+				Reset:           true,
+			}},
+			want:    decodeHex("adbccbda000000020000000d0000000657534a542d58000000064b4d3441434b00ffffffffffffffff000000ffffffffffffffff000000"),
 			wantErr: false,
 		},
 	}

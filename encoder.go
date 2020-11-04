@@ -84,8 +84,8 @@ func encodeHighlightCallsign(msg HighlightCallsignMessage) ([]byte, error) {
 	e.encodeUint32(highlightCallsignNum)
 	e.encodeUtf8(msg.Id)
 	e.encodeUtf8(msg.Callsign)
-	e.encodeColor(msg.BackgroundColor)
-	e.encodeColor(msg.ForegroundColor)
+	e.encodeColor(msg.BackgroundColor, msg.Reset)
+	e.encodeColor(msg.ForegroundColor, msg.Reset)
 	e.encodeBool(msg.HighlightLast)
 	return e.finish()
 }
@@ -175,23 +175,27 @@ func (e encoder) encodeUtf8(str string) {
 	e.buf.WriteString(str)
 }
 
-func (e encoder) encodeColor(color color.Color) {
-	// TODO: the invalid color
-
+func (e encoder) encodeColor(color color.Color, invalid bool) {
 	// Spec enum: https://github.com/radekp/qt/blob/b881d8fb/src/gui/painting/qcolor.h#L70
-	const rgbSpec = 1
-	const pad = 0
+	const invalidSpec = uint8(0)
+	const rgbSpec = uint8(1)
+	const pad = uint16(0)
+
+	spec := rgbSpec
+	if invalid {
+		spec = invalidSpec
+	}
 
 	// pre-multiplied to range 0x0 to 0xffff
 	r, g, b, a := color.RGBA()
 
 	// Field type and order: https://github.com/radekp/qt/blob/b881d8fb/src/gui/painting/qcolor.cpp#L2506
-	e.encodeUint8(rgbSpec)
+	e.encodeUint8(spec)
 	e.encodeUint16(uint16(a))
 	e.encodeUint16(uint16(r))
 	e.encodeUint16(uint16(g))
 	e.encodeUint16(uint16(b))
-	e.encodeUint16(uint16(pad))
+	e.encodeUint16(pad)
 }
 
 func (e encoder) finish() ([]byte, error) {

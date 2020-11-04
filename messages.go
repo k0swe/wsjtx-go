@@ -311,6 +311,12 @@ type HighlightCallsignMessage struct {
 	BackgroundColor color.Color `json:"backgroundColor"`
 	ForegroundColor color.Color `json:"foregroundColor"`
 	HighlightLast   bool        `json:"highlightLast"`
+	// This field is not part of the WSJT-X message, but is a necessary addition
+	// to be able to reset the highlighting. QT's color has a sentinel value in
+	// QColor to signal an "invalid" color; golang image/color doesn't have
+	// that, so we add this field. If this is true, BackgroundColor and
+	// ForegroundColor become "invalid" colors.
+	Reset bool `json:"reset"`
 }
 
 const highlightCallsignNum = 13
