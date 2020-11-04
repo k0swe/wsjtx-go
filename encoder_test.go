@@ -179,3 +179,35 @@ func Test_encodeReplay(t *testing.T) {
 		})
 	}
 }
+
+func Test_encodeHaltTx(t *testing.T) {
+	type args struct {
+		msg HaltTxMessage
+	}
+	wantBin, _ := hex.DecodeString("adbccbda00000002000000080000000657534a542d5800")
+	tests := []struct {
+		name    string
+		args    args
+		want    []byte
+		wantErr bool
+	}{
+		{
+			name:    "encodeHaltTx",
+			args:    args{msg: HaltTxMessage{"WSJT-X", false}},
+			want:    wantBin,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := encodeHaltTx(tt.args.msg)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("encodeHaltTx() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("encodeHaltTx() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

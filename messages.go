@@ -195,6 +195,22 @@ type ReplayMessage struct {
 const replayNum = 7
 
 /*
+The server may stop a client from transmitting messages either
+immediately or at  the end of the  current transmission period
+using this message.
+
+In only.
+
+https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l343
+*/
+type HaltTxMessage struct {
+	Id         string `json:"id"`
+	AutoTxOnly bool   `json:"autoTxOnly"`
+}
+
+const haltTxNum = 8
+
+/*
 The decode message is sent when  a new decode is completed, in
 this case the 'New' field is true.
 

@@ -78,6 +78,13 @@ func (s *Server) Replay(msg ReplayMessage) error {
 	return err
 }
 
+// Send a message to WSJT-X to halt transmission.
+func (s *Server) HaltTx(msg HaltTxMessage) error {
+	msgBytes, _ := encodeHaltTx(msg)
+	_, err := s.conn.WriteTo(msgBytes, s.remoteAddr)
+	return err
+}
+
 func check(err error) {
 	if err != nil {
 		panic(err)

@@ -53,6 +53,14 @@ func encodeReplay(msg ReplayMessage) ([]byte, error) {
 	return e.finish()
 }
 
+func encodeHaltTx(msg HaltTxMessage) ([]byte, error) {
+	e := newEncoder()
+	e.encodeUint32(haltTxNum)
+	e.encodeUtf8(msg.Id)
+	e.encodeBool(msg.AutoTxOnly)
+	return e.finish()
+}
+
 type encoder struct {
 	buf *bytes.Buffer
 }
