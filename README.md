@@ -1,3 +1,4 @@
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/k0swe/wsjtx-go)](https://pkg.go.dev/github.com/k0swe/wsjtx-go)
 ![Test](https://github.com/k0swe/wsjtx-go/workflows/Test/badge.svg?branch=main)
 
 # wsjtx-go
