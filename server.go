@@ -8,6 +8,8 @@ const magic = 0xadbccbda
 const schema = 2
 const qDataStreamNull = 0xffffffff
 const bufLen = 1024
+const multicastAddr = "224.0.0.1"
+const wsjtxPort = "2237"
 
 type Server struct {
 	conn       *net.UDPConn
@@ -16,12 +18,21 @@ type Server struct {
 
 // Create a UDP connection to communicate with WSJT-X.
 func MakeServer() Server {
-	// TODO: make listening address and port customizable?
-	musticastAddr := "224.0.0.1"
-	wsjtxPort := "2237"
-	addr, err := net.ResolveUDPAddr("udp", musticastAddr+":"+wsjtxPort)
+	return MakeMulticastServer(multicastAddr, wsjtxPort)
+}
+
+func MakeMulticastServer(addrStr string, portStr string) Server {
+	addr, err := net.ResolveUDPAddr("udp", addrStr+":"+portStr)
 	check(err)
-	conn, err := net.ListenMulticastUDP("udp", nil, addr)
+	conn, err := net.ListenMulticastUDP(addr.Network(), nil, addr)
+	check(err)
+	return Server{conn, nil}
+}
+
+func MakeUnicastServer(addrStr string, portStr string) Server {
+	addr, err := net.ResolveUDPAddr("udp", addrStr+":"+portStr)
+	check(err)
+	conn, err := net.ListenUDP(addr.Network(), addr)
 	check(err)
 	return Server{conn, nil}
 }
