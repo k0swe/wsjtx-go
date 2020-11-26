@@ -21,8 +21,8 @@ type parser struct {
 // received by WSJT-X.
 func parseMessage(buffer []byte, length int) interface{} {
 	p := parser{buffer: buffer, length: length, cursor: 0}
-	magic := p.parseUint32()
-	if magic != magic {
+	m := p.parseUint32()
+	if m != magic {
 		// Packet is not speaking the WSJT-X protocol
 		return nil
 	}
