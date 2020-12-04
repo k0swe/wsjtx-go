@@ -1,0 +1,29 @@
+Source: golang-github-k0swe-wsjtx-go
+Maintainer: Debian Go Packaging Team <team+pkg-go@tracker.debian.org>
+Uploaders: Chris Keller <xylo04@gmail.com>
+Section: devel
+Testsuite: autopkgtest-pkg-go
+Priority: optional
+Build-Depends: debhelper-compat (= 13),
+               dh-golang,
+               golang-any,
+               golang-github-leemcloughlin-jdn-dev
+Standards-Version: 4.5.0
+Vcs-Browser: https://salsa.debian.org/go-team/packages/golang-github-k0swe-wsjtx-go
+Vcs-Git: https://salsa.debian.org/go-team/packages/golang-github-k0swe-wsjtx-go.git
+Homepage: https://github.com/k0swe/wsjtx-go
+Rules-Requires-Root: no
+XS-Go-Import-Path: github.com/k0swe/wsjtx-go
+
+Package: golang-github-k0swe-wsjtx-go-dev
+Architecture: all
+Depends: ${misc:Depends}
+Description: Golang binding for the WSJT-X amateur radio software's UDP interface (library)
+ Golang binding for the WSJT-X amateur radio software's UDP communication
+ interface. This library supports receiving and sending all WSJT-X message
+ types up through WSJT-X v2.3.0.
+ .
+ This is meant to be a fairly thin binding
+ API, so familiarity with WSJT-X's NetworkMessage.hpp
+ (https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp)
+ is recommended.
