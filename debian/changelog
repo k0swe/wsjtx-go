@@ -1,5 +1,5 @@
-golang-github-k0swe-wsjtx-go (1.1.0-1) UNRELEASED; urgency=medium
+golang-github-k0swe-wsjtx-go (1.1.1-1) UNRELEASED; urgency=medium
 
   * Initial release (Closes: 975583)
 
- -- Chris Keller <xylo04@gmail.com>  Mon, 23 Nov 2020 12:56:22 -0700
+ -- Chris Keller <xylo04@gmail.com>  Fri, 04 Dec 2020 15:48:25 -0700
