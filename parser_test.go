@@ -141,7 +141,11 @@ func TestParseMessage(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := parseMessage(tt.args.buffer, tt.args.length); !reflect.DeepEqual(got, tt.want) {
+			got, err := parseMessage(tt.args.buffer, tt.args.length)
+			if err != nil {
+				t.Error(err)
+			}
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("parseMessage() = %v, want %v", got, tt.want)
 			}
 		})

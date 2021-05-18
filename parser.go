@@ -2,8 +2,8 @@ package wsjtx
 
 import (
 	"encoding/binary"
+	"fmt"
 	"github.com/leemcloughlin/jdn"
-	"log"
 	"math"
 	"reflect"
 	"time"
@@ -19,62 +19,65 @@ type parser struct {
 // https://sourceforge.net/p/wsjt/wsjtx/ci/master/tree/Network/NetworkMessage.hpp. This only parses
 // "Out" or "In/Out" message types and does not include "In" types because they will never be
 // received by WSJT-X.
-func parseMessage(buffer []byte, length int) interface{} {
+func parseMessage(buffer []byte, length int) (interface{}, error) {
 	p := parser{buffer: buffer, length: length, cursor: 0}
 	m := p.parseUint32()
 	if m != magic {
-		// Packet is not speaking the WSJT-X protocol
-		return nil
+		return nil, fmt.Errorf("packet is not speaking the WSJT-X protocol")
 	}
 	sch := p.parseUint32()
 	if sch != schema {
-		log.Println("Got a schema version I wasn't expecting:", sch)
+		return nil, fmt.Errorf("got a schema version I wasn't expecting: %d", sch)
 	}
 
 	messageType := p.parseUint32()
 	switch messageType {
 	case heartbeatNum:
 		heartbeat := p.parseHeartbeat()
-		p.checkParse(heartbeat)
-		return heartbeat
+		err := p.checkParse(heartbeat)
+		return heartbeat, err
 	case statusNum:
 		status := p.parseStatus()
-		p.checkParse(status)
-		return status
+		err := p.checkParse(status)
+		return status, err
 	case decodeNum:
 		decode := p.parseDecode()
-		p.checkParse(decode)
-		return decode
+		err := p.checkParse(decode)
+		return decode, err
 	case clearNum:
 		clear := p.parseClear()
-		p.checkParse(clear)
-		return clear
+		err := p.checkParse(clear)
+		return clear, err
 	case qsoLoggedNum:
-		qsoLogged := p.parseQsoLogged()
-		p.checkParse(qsoLogged)
-		return qsoLogged
+		qsoLogged, err := p.parseQsoLogged()
+		if err != nil {
+			return qsoLogged, err
+		}
+		err = p.checkParse(qsoLogged)
+		return qsoLogged, err
 	case closeNum:
 		closeMsg := p.parseClose()
-		p.checkParse(closeMsg)
-		return closeMsg
+		err := p.checkParse(closeMsg)
+		return closeMsg, err
 	case wsprDecodeNum:
 		wspr := p.parseWsprDecode()
-		p.checkParse(wspr)
-		return wspr
+		err := p.checkParse(wspr)
+		return wspr, err
 	case loggedAdifNum:
 		loggedAdif := p.parseLoggedAdif()
-		p.checkParse(loggedAdif)
-		return loggedAdif
+		err := p.checkParse(loggedAdif)
+		return loggedAdif, err
 	}
-	return nil
+	return nil, nil
 }
 
 // Quick sanity check that we parsed all of the message bytes
-func (p *parser) checkParse(message interface{}) {
+func (p *parser) checkParse(message interface{}) error {
 	if p.cursor != p.length {
-		log.Fatalf("Parsing WSJT-X %s: There were %d bytes left over\n",
+		return fmt.Errorf("Parsing WSJT-X %s: There were %d bytes left over\n",
 			reflect.TypeOf(message).Name(), p.length-p.cursor)
 	}
+	return nil
 }
 
 func (p *parser) parseHeartbeat() HeartbeatMessage {
@@ -169,9 +172,13 @@ func (p *parser) parseClear() ClearMessage {
 	}
 }
 
-func (p *parser) parseQsoLogged() QsoLoggedMessage {
+func (p *parser) parseQsoLogged() (QsoLoggedMessage, error) {
+	var empty QsoLoggedMessage
 	id := p.parseUtf8()
-	timeOff := p.parseQDateTime()
+	timeOff, err := p.parseQDateTime()
+	if err != nil {
+		return empty, err
+	}
 	dxCall := p.parseUtf8()
 	dxGrid := p.parseUtf8()
 	txFrequency := p.parseUint64()
@@ -181,7 +188,10 @@ func (p *parser) parseQsoLogged() QsoLoggedMessage {
 	txPower := p.parseUtf8()
 	comments := p.parseUtf8()
 	name := p.parseUtf8()
-	timeOn := p.parseQDateTime()
+	timeOn, err := p.parseQDateTime()
+	if err != nil {
+		return empty, err
+	}
 	operatorCall := p.parseUtf8()
 	myCall := p.parseUtf8()
 	myGrid := p.parseUtf8()
@@ -205,7 +215,7 @@ func (p *parser) parseQsoLogged() QsoLoggedMessage {
 		MyGrid:           myGrid,
 		ExchangeSent:     exchangeSent,
 		ExchangeReceived: exchangeReceived,
-	}
+	}, nil
 }
 
 func (p *parser) parseClose() interface{} {
@@ -299,7 +309,7 @@ func (p *parser) parseBool() bool {
 	return value
 }
 
-func (p *parser) parseQDateTime() time.Time {
+func (p *parser) parseQDateTime() (time.Time, error) {
 	julianDay := p.parseUint64()
 	year, month, day := jdn.FromNumber(int(julianDay))
 	msSinceMidnight := int(p.parseUint32())
@@ -318,7 +328,7 @@ func (p *parser) parseQDateTime() time.Time {
 		// UTC
 		value = time.Date(year, month, day, hour, minute, second, 0, time.UTC)
 	default:
-		log.Fatalln("WSJT-X parser: Got a timespec I wasn't expecting,", timespec)
+		return value, fmt.Errorf("got a timespec I wasn't expecting: %d", timespec)
 	}
-	return value
+	return value, nil
 }

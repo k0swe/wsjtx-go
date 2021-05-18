@@ -17,24 +17,34 @@ type Server struct {
 }
 
 // Create a UDP connection to communicate with WSJT-X.
-func MakeServer() Server {
+func MakeServer() (Server, error) {
 	return MakeMulticastServer(multicastAddr, wsjtxPort)
 }
 
-func MakeMulticastServer(addrStr string, portStr string) Server {
+func MakeMulticastServer(addrStr string, portStr string) (Server, error) {
+	var empty Server
 	addr, err := net.ResolveUDPAddr("udp", addrStr+":"+portStr)
-	check(err)
+	if err != nil {
+		return empty, err
+	}
 	conn, err := net.ListenMulticastUDP(addr.Network(), nil, addr)
-	check(err)
-	return Server{conn, nil}
+	if err != nil {
+		return empty, err
+	}
+	return Server{conn, nil}, nil
 }
 
-func MakeUnicastServer(addrStr string, portStr string) Server {
+func MakeUnicastServer(addrStr string, portStr string) (Server, error) {
+	var empty Server
 	addr, err := net.ResolveUDPAddr("udp", addrStr+":"+portStr)
-	check(err)
+	if err != nil {
+		return empty, err
+	}
 	conn, err := net.ListenUDP(addr.Network(), addr)
-	check(err)
-	return Server{conn, nil}
+	if err != nil {
+		return empty, err
+	}
+	return Server{conn, nil}, nil
 }
 
 // Goroutine to listen for messages from WSJT-X. When heard, the messages are
@@ -43,9 +53,9 @@ func (s *Server) ListenToWsjtx(c chan interface{}) {
 	for {
 		b := make([]byte, bufLen)
 		length, rAddr, err := s.conn.ReadFromUDP(b)
-		check(err)
+		c <- err
 		s.remoteAddr = rAddr
-		message := parseMessage(b, length)
+		message, err := parseMessage(b, length)
 		if message != nil {
 			c <- message
 		}
@@ -129,10 +139,4 @@ func (s *Server) Configure(msg ConfigureMessage) error {
 	msgBytes, _ := encodeConfigure(msg)
 	_, err := s.conn.WriteTo(msgBytes, s.remoteAddr)
 	return err
-}
-
-func check(err error) {
-	if err != nil {
-		panic(err)
-	}
 }
