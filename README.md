@@ -1,6 +1,6 @@
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/k0swe/wsjtx-go)](https://pkg.go.dev/github.com/k0swe/wsjtx-go)
 [![Go Report Card](https://goreportcard.com/badge/github.com/k0swe/wsjtx-go)](https://goreportcard.com/report/github.com/k0swe/wsjtx-go)
-![Test](https://github.com/k0swe/wsjtx-go/workflows/Test/badge.svg?branch=main)
+[![Test](https://github.com/k0swe/wsjtx-go/workflows/Test/badge.svg?branch=main)](https://github.com/k0swe/wsjtx-go/actions/workflows/test.yml?query=branch%3Amain)
 
 # wsjtx-go
 
