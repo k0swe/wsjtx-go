@@ -74,7 +74,7 @@ func parseMessage(buffer []byte, length int) (interface{}, error) {
 // Quick sanity check that we parsed all of the message bytes
 func (p *parser) checkParse(message interface{}) error {
 	if p.cursor != p.length {
-		return fmt.Errorf("Parsing WSJT-X %s: There were %d bytes left over\n",
+		return fmt.Errorf("parsing WSJT-X %s: there were %d bytes left over",
 			reflect.TypeOf(message).Name(), p.length-p.cursor)
 	}
 	return nil

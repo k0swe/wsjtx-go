@@ -2,8 +2,8 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"github.com/k0swe/wsjtx-go"
+	"log"
 	"os"
 	"reflect"
 	"strings"
@@ -11,16 +11,22 @@ import (
 
 // Simple driver binary for wsjtx-go library.
 func main() {
-	fmt.Println("Listening for WSJT-X...")
+	log.Println("Listening for WSJT-X...")
+	wsjtxServer, err := wsjtx.MakeServer()
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
 	wsjtxChannel := make(chan interface{}, 5)
-	wsjtxServer := wsjtx.MakeServer()
-	go wsjtxServer.ListenToWsjtx(wsjtxChannel)
+	errChannel := make(chan error, 5)
+	go wsjtxServer.ListenToWsjtx(wsjtxChannel, errChannel)
 
 	stdinChannel := make(chan string, 5)
 	go stdinCmd(stdinChannel)
 
 	for {
 		select {
+		case err := <-errChannel:
+			log.Printf("error: %v", err)
 		case message := <-wsjtxChannel:
 			handleServerMessage(message)
 		case command := <-stdinChannel:
@@ -39,7 +45,7 @@ func stdinCmd(c chan string) {
 			c <- input
 		}
 		if err := scanner.Err(); err != nil {
-			fmt.Println(err)
+			log.Println(err)
 			os.Exit(1)
 		}
 	}
@@ -49,23 +55,23 @@ func stdinCmd(c chan string) {
 func handleServerMessage(message interface{}) {
 	switch message.(type) {
 	case wsjtx.HeartbeatMessage:
-		fmt.Println("Heartbeat:", message)
+		log.Println("Heartbeat:", message)
 	case wsjtx.StatusMessage:
-		fmt.Println("Status:", message)
+		log.Println("Status:", message)
 	case wsjtx.DecodeMessage:
-		fmt.Println("Decode:", message)
+		log.Println("Decode:", message)
 	case wsjtx.ClearMessage:
-		fmt.Println("Clear:", message)
+		log.Println("Clear:", message)
 	case wsjtx.QsoLoggedMessage:
-		fmt.Println("QSO Logged:", message)
+		log.Println("QSO Logged:", message)
 	case wsjtx.CloseMessage:
-		fmt.Println("Close:", message)
+		log.Println("Close:", message)
 	case wsjtx.WSPRDecodeMessage:
-		fmt.Println("WSPR Decode:", message)
+		log.Println("WSPR Decode:", message)
 	case wsjtx.LoggedAdifMessage:
-		fmt.Println("Logged Adif:", message)
+		log.Println("Logged Adif:", message)
 	default:
-		fmt.Println("Other:", reflect.TypeOf(message), message)
+		log.Println("Other:", reflect.TypeOf(message), message)
 	}
 }
 
@@ -75,7 +81,7 @@ func handleCommand(command string, wsjtxServer wsjtx.Server) {
 	switch command {
 
 	case "hb":
-		fmt.Println("Sending Heartbeat")
+		log.Println("Sending Heartbeat")
 		err = wsjtxServer.Heartbeat(wsjtx.HeartbeatMessage{
 			Id:        "wsjtx-go",
 			MaxSchema: 2,
@@ -84,19 +90,19 @@ func handleCommand(command string, wsjtxServer wsjtx.Server) {
 		})
 
 	case "clear":
-		fmt.Println("Sending Clear")
+		log.Println("Sending Clear")
 		err = wsjtxServer.Clear(wsjtx.ClearMessage{Id: "WSJT-X", Window: 2})
 
 	case "close":
-		fmt.Println("Sending Close")
+		log.Println("Sending Close")
 		err = wsjtxServer.Close(wsjtx.CloseMessage{Id: "WSJT-X"})
 
 	case "replay":
-		fmt.Println("Sending Replay")
+		log.Println("Sending Replay")
 		err = wsjtxServer.Replay(wsjtx.ReplayMessage{Id: "WSJT-X"})
 
 	}
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 }
