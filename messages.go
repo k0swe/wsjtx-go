@@ -57,6 +57,7 @@ type StatusMessage struct {
 	FrequencyTolerance   uint32 `json:"frequencyTolerance"`
 	TRPeriod             uint32 `json:"txRxPeriod"`
 	ConfigurationName    string `json:"configName"`
+	TxMessage            string `json:"txMessage"`
 }
 
 const statusNum = 1

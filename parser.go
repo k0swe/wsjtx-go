@@ -115,6 +115,7 @@ func (p *parser) parseStatus() StatusMessage {
 	freqTolerance := p.parseUint32()
 	trPeriod := p.parseUint32()
 	configName := p.parseUtf8()
+	txMessage := p.parseUtf8()
 	return StatusMessage{
 		Id:                   id,
 		DialFrequency:        dialFreq,
@@ -137,6 +138,7 @@ func (p *parser) parseStatus() StatusMessage {
 		FrequencyTolerance:   freqTolerance,
 		TRPeriod:             trPeriod,
 		ConfigurationName:    configName,
+		TxMessage:            txMessage,
 	}
 }
 
