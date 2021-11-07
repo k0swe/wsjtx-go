@@ -5,10 +5,10 @@
 # wsjtx-go
 
 Golang binding for the WSJT-X amateur radio software's UDP communication interface. This library
-supports receiving and sending all WSJT-X message types up through WSJT-X v2.3.0.
+supports receiving and sending all WSJT-X message types up through WSJT-X v2.5.2.
 
 This is meant to be a fairly thin binding API, so familiarity with WSJT-X's
-[`NetworkMessage.hpp`](https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp)
+[`NetworkMessage.hpp`](https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp)
 is recommended.
 
 ## Run
