@@ -2,11 +2,12 @@ package main
 
 import (
 	"bufio"
-	"github.com/k0swe/wsjtx-go/v2"
 	"log"
 	"os"
 	"reflect"
 	"strings"
+
+	"github.com/k0swe/wsjtx-go/v3"
 )
 
 // Simple driver binary for wsjtx-go library.

@@ -1,15 +1,19 @@
 package wsjtx
 
 import (
+	"errors"
+	"fmt"
 	"net"
+	"runtime"
 )
 
 const magic = 0xadbccbda
 const schema = 2
 const qDataStreamNull = 0xffffffff
 const bufLen = 1024
+const localhostAddr = "127.0.0.1"
 const multicastAddr = "224.0.0.1"
-const wsjtxPort = "2237"
+const wsjtxPort = 2237
 
 type Server struct {
 	conn       *net.UDPConn
@@ -20,35 +24,34 @@ type Server struct {
 // MakeServer creates a multicast UDP connection to communicate with WSJT-X on the default address
 // and port.
 func MakeServer() (Server, error) {
-	return MakeMulticastServer(multicastAddr, wsjtxPort)
+	var defaultWsjtxAddr net.IP
+	switch runtime.GOOS {
+	case "windows":
+		defaultWsjtxAddr = net.ParseIP(localhostAddr)
+	default:
+		defaultWsjtxAddr = net.ParseIP(multicastAddr)
+	}
+	return MakeServerGiven(defaultWsjtxAddr, wsjtxPort)
 }
 
-// MakeMulticastServer creates a multicast UDP connection to communicate with WSJT-X on the given
-// address and port.
-func MakeMulticastServer(addrStr string, portStr string) (Server, error) {
-	var empty Server
-	addr, err := net.ResolveUDPAddr("udp", addrStr+":"+portStr)
+// MakeServerGiven creates a UDP connection to communicate with WSJT-X on the given address and
+// port.
+func MakeServerGiven(ipAddr net.IP, port uint) (Server, error) {
+	addr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%v:%d", ipAddr, port))
 	if err != nil {
-		return empty, err
+		return Server{}, err
 	}
-	conn, err := net.ListenMulticastUDP(addr.Network(), nil, addr)
-	if err != nil {
-		return empty, err
+	var conn *net.UDPConn
+	if ipAddr.IsMulticast() {
+		conn, err = net.ListenMulticastUDP(addr.Network(), nil, addr)
+	} else {
+		conn, err = net.ListenUDP(addr.Network(), addr)
 	}
-	return Server{conn, nil, false}, nil
-}
-
-// MakeUnicastServer creates a unicast UDP connection to communicate with WSJT-X on the given
-// address and port.
-func MakeUnicastServer(addrStr string, portStr string) (Server, error) {
-	var empty Server
-	addr, err := net.ResolveUDPAddr("udp", addrStr+":"+portStr)
 	if err != nil {
-		return empty, err
+		return Server{}, err
 	}
-	conn, err := net.ListenUDP(addr.Network(), addr)
-	if err != nil {
-		return empty, err
+	if conn == nil {
+		return Server{}, errors.New("wsjtx udp connection not opened")
 	}
 	return Server{conn, nil, false}, nil
 }
@@ -64,9 +67,14 @@ func (s *Server) ListenToWsjtx(c chan interface{}, e chan error) {
 
 	for {
 		b := make([]byte, bufLen)
+		if s.conn == nil {
+			e <- errors.New("wsjtx connection is nil")
+			s.listening = false
+			return
+		}
 		length, rAddr, err := s.conn.ReadFromUDP(b)
 		if err != nil {
-			e <- err
+			e <- fmt.Errorf("problem reading from wsjtx: %w", err)
 			s.listening = false
 			return
 		}
