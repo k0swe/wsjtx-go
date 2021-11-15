@@ -1,3 +1,9 @@
+golang-github-k0swe-wsjtx-go (3.0.0-1) UNRELEASED; urgency=medium
+
+  * New API for listening on multicast vs unicast
+
+ -- Chris Keller <xylo04@gmail.com>  Tue, 09 Nov 2021 20:42:00 -0600
+
 golang-github-k0swe-wsjtx-go (2.1.0-1) UNRELEASED; urgency=medium
 
   * Increased robustness in parser
