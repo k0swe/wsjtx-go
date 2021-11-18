@@ -4,10 +4,11 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"github.com/leemcloughlin/jdn"
 	"math"
 	"reflect"
 	"time"
+
+	"github.com/leemcloughlin/jdn"
 )
 
 type parser struct {
@@ -192,6 +193,7 @@ func (p *parser) parseQsoLogged() (QsoLoggedMessage, error) {
 	qsoLoggedMessage.MyGrid, err = p.parseUtf8()
 	qsoLoggedMessage.ExchangeSent, err = p.parseUtf8()
 	qsoLoggedMessage.ExchangeReceived, err = p.parseUtf8()
+	qsoLoggedMessage.ADIFPropagationMode, err = p.parseUtf8()
 	return qsoLoggedMessage, err
 }
 

@@ -115,25 +115,26 @@ func TestParseMessage(t *testing.T) {
 		},
 		{
 			name: "Parse QSO Logged",
-			args: argsFrom(`adbccbda00000002000000050000000657534a542d5800000000002586110277ac48010000000454335354000000044a4b373300000000006bf86e00000003465438000000022d33000000022d37000000013500000007436f6d6d656e74000000034a6f6500000000002586110276c1e801000000055433535452000000054b3053574500000006444d37394c56000000023142000000023144`),
+			args: argsFrom(`adbccbda00000002000000050000000657534a542d5800000000002586110277ac48010000000454335354000000044a4b373300000000006bf86e00000003465438000000022d33000000022d37000000013500000007436f6d6d656e74000000034a6f6500000000002586110276c1e801000000055433535452000000054b3053574500000006444d37394c5600000002314200000002314400000003494f4e`),
 			want: parseResult{QsoLoggedMessage{
-				Id:               "WSJT-X",
-				DateTimeOff:      parseTime("2020-10-30 11:29:57 +0000 UTC"),
-				DxCall:           "T3ST",
-				DxGrid:           "JK73",
-				TxFrequency:      7075950,
-				Mode:             "FT8",
-				ReportSent:       "-3",
-				ReportReceived:   "-7",
-				TxPower:          "5",
-				Comments:         "Comment",
-				Name:             "Joe",
-				DateTimeOn:       parseTime("2020-10-30 11:28:57 +0000 UTC"),
-				OperatorCall:     "T3STR",
-				MyCall:           "K0SWE",
-				MyGrid:           "DM79LV",
-				ExchangeSent:     "1B",
-				ExchangeReceived: "1D",
+				Id:                  "WSJT-X",
+				DateTimeOff:         parseTime("2020-10-30 11:29:57 +0000 UTC"),
+				DxCall:              "T3ST",
+				DxGrid:              "JK73",
+				TxFrequency:         7075950,
+				Mode:                "FT8",
+				ReportSent:          "-3",
+				ReportReceived:      "-7",
+				TxPower:             "5",
+				Comments:            "Comment",
+				Name:                "Joe",
+				DateTimeOn:          parseTime("2020-10-30 11:28:57 +0000 UTC"),
+				OperatorCall:        "T3STR",
+				MyCall:              "K0SWE",
+				MyGrid:              "DM79LV",
+				ExchangeSent:        "1B",
+				ExchangeReceived:    "1D",
+				ADIFPropagationMode: "ION",
 			}, nil},
 		},
 		{
@@ -180,7 +181,7 @@ func TestParseMessage(t *testing.T) {
 				t.Error(err)
 			}
 			if !reflect.DeepEqual(got, tt.want.message) {
-				t.Errorf("parseMessage() = %v, want %v", got, tt.want)
+				t.Errorf("\nwant %v\ngot  %v", tt.want.message, got)
 			}
 		})
 	}

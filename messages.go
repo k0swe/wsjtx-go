@@ -15,7 +15,7 @@ after it receives  the initial heartbeat message  from a client.
 
 Out/In.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l110
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l110
 */
 type HeartbeatMessage struct {
 	Id        string `json:"id"`
@@ -33,7 +33,7 @@ client without the need for  polling commands.
 
 Out only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l141
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l141
 */
 type StatusMessage struct {
 	Id                   string `json:"id"`
@@ -71,7 +71,7 @@ as a one of these messages  with the 'New' field set to false.
 
 Out only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l206
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l208
 */
 type DecodeMessage struct {
 	Id               string  `json:"id"`
@@ -101,7 +101,7 @@ The Window  argument  can be  one  of the  following values:
 
 Out/In.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l232
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l234
 */
 type ClearMessage struct {
 	Id     string `json:"id"`
@@ -121,7 +121,7 @@ the "Band activity" window.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l253
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l255
 */
 type ReplyMessage struct {
 	Id               string  `json:"id"`
@@ -143,26 +143,27 @@ the "OK" button.
 
 Out only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l293
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l295
 */
 type QsoLoggedMessage struct {
-	Id               string    `json:"id"`
-	DateTimeOff      time.Time `json:"dateTimeOff"`
-	DxCall           string    `json:"dxCall"`
-	DxGrid           string    `json:"dxGrid"`
-	TxFrequency      uint64    `json:"txFrequency"`
-	Mode             string    `json:"mode"`
-	ReportSent       string    `json:"reportSent"`
-	ReportReceived   string    `json:"reportReceived"`
-	TxPower          string    `json:"txPower"`
-	Comments         string    `json:"comments"`
-	Name             string    `json:"name"`
-	DateTimeOn       time.Time `json:"dateTimeOn"`
-	OperatorCall     string    `json:"operatorCall"`
-	MyCall           string    `json:"myCall"`
-	MyGrid           string    `json:"myGrid"`
-	ExchangeSent     string    `json:"exchangeSent"`
-	ExchangeReceived string    `json:"exchangeReceived"`
+	Id                  string    `json:"id"`
+	DateTimeOff         time.Time `json:"dateTimeOff"`
+	DxCall              string    `json:"dxCall"`
+	DxGrid              string    `json:"dxGrid"`
+	TxFrequency         uint64    `json:"txFrequency"`
+	Mode                string    `json:"mode"`
+	ReportSent          string    `json:"reportSent"`
+	ReportReceived      string    `json:"reportReceived"`
+	TxPower             string    `json:"txPower"`
+	Comments            string    `json:"comments"`
+	Name                string    `json:"name"`
+	DateTimeOn          time.Time `json:"dateTimeOn"`
+	OperatorCall        string    `json:"operatorCall"`
+	MyCall              string    `json:"myCall"`
+	MyGrid              string    `json:"myGrid"`
+	ExchangeSent        string    `json:"exchangeSent"`
+	ExchangeReceived    string    `json:"exchangeReceived"`
+	ADIFPropagationMode string    `json:"propagationMode"`
 }
 
 const qsoLoggedNum = 5
@@ -173,7 +174,7 @@ down gracefully.
 
 Out/In.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l318
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l320
 */
 type CloseMessage struct {
 	Id string `json:"id"`
@@ -190,7 +191,7 @@ activity"  window.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l326
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l328
 */
 type ReplayMessage struct {
 	Id string `json:"id"`
@@ -205,7 +206,7 @@ using this message.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l343
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l343
 */
 type HaltTxMessage struct {
 	Id         string `json:"id"`
@@ -226,7 +227,7 @@ is current.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l350
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l352
 */
 type FreeTextMessage struct {
 	Id   string `json:"id"`
@@ -242,7 +243,7 @@ this case the 'New' field is true.
 
 Out only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l381).
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l383
 */
 type WSPRDecodeMessage struct {
 	Id        string  `json:"id"`
@@ -269,7 +270,7 @@ application  settings.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l404
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l406
 */
 type LocationMessage struct {
 	Id       string `json:"id"`
@@ -285,7 +286,7 @@ button.
 
 Out only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l421
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l423
 */
 type LoggedAdifMessage struct {
 	Id   string `json:"id"`
@@ -304,7 +305,7 @@ either or both  of the background and  foreground fields.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l442
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l444
 */
 type HighlightCallsignMessage struct {
 	Id              string      `json:"id"`
@@ -312,11 +313,10 @@ type HighlightCallsignMessage struct {
 	BackgroundColor color.Color `json:"backgroundColor"`
 	ForegroundColor color.Color `json:"foregroundColor"`
 	HighlightLast   bool        `json:"highlightLast"`
-	// This field is not part of the WSJT-X message, but is a necessary addition
-	// to be able to reset the highlighting. QT's color has a sentinel value in
-	// QColor to signal an "invalid" color; golang image/color doesn't have
-	// that, so we add this field. If this is true, BackgroundColor and
-	// ForegroundColor become "invalid" colors.
+	// This field is not part of the WSJT-X message and is specific to the golang library. It is a
+	// necessary addition to be able to reset the highlighting. QT's color has a sentinel value in
+	// QColor to signal an "invalid" color; golang image/color doesn't have that, so we add this
+	// field. If this is true, BackgroundColor and ForegroundColor become "invalid" colors.
 	Reset bool `json:"reset"`
 }
 
@@ -329,7 +329,7 @@ configuration must exist.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l468
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l445
 */
 type SwitchConfigurationMessage struct {
 	Id                string `json:"id"`
@@ -348,7 +348,7 @@ silently ignored.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/8f99fcce/tree/Network/NetworkMessage.hpp#l477
+https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l479
 */
 type ConfigureMessage struct {
 	Id                 string `json:"id"`
