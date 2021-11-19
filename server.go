@@ -56,6 +56,10 @@ func MakeServerGiven(ipAddr net.IP, port uint) (Server, error) {
 	return Server{conn, nil, false}, nil
 }
 
+func (s *Server) LocalAddr() net.Addr {
+	return s.conn.LocalAddr()
+}
+
 // ListenToWsjtx listens for messages from WSJT-X. When heard, the messages are parsed and then
 // placed in the given message channel. If parsing errors occur, those are reported on the errors
 // channel. If a fatal error happens, e.g. the network connection gets closed, the channels are
