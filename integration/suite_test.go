@@ -34,8 +34,9 @@ func (s *integrationTestSuite) SetupSuite() {
 	s.Require().NoError(err)
 }
 
-func (s *integrationTestSuite) Test_Integration_Heartbeat() {
-	input, _ := hex.DecodeString(`adbccbda00000002000000000000000657534a542d580000000300000005322e322e3200000006306439623936`)
+func (s *integrationTestSuite) Test_Integration_Receive_Heartbeat() {
+	input, _ := hex.DecodeString(
+		`adbccbda00000002000000000000000657534a542d580000000300000005322e322e3200000006306439623936`)
 	expected := wsjtx.HeartbeatMessage{
 		Id:        "WSJT-X",
 		MaxSchema: 3,
@@ -61,7 +62,71 @@ func (s *integrationTestSuite) Test_Integration_Heartbeat() {
 		case err := <-s.errChan:
 			s.Require().NoError(err)
 			return
-		case <-time.After(5 * time.Second):
+		case <-time.After(50 * time.Millisecond):
+			s.Fail("timeout")
+			return
+		}
+	}
+}
+
+func (s *integrationTestSuite) Test_Integration_Receive_Close() {
+	input, _ := hex.DecodeString(
+		`adbccbda00000002000000060000000657534a542d58`)
+	expected := wsjtx.CloseMessage{
+		Id: "WSJT-X",
+	}
+	_, err := s.fake.SendMessage(input)
+	s.Require().NoError(err)
+
+	for {
+		select {
+		case msg := <-s.msgChan:
+			switch msg.(type) {
+			case wsjtx.CloseMessage:
+				actual := msg.(wsjtx.CloseMessage)
+				s.Require().Equal(expected, actual)
+				return
+			default:
+				s.Failf("wrong message type", "expected type %T but got %T",
+					wsjtx.CloseMessage{}, msg)
+				return
+			}
+		case err := <-s.errChan:
+			s.Require().NoError(err)
+			return
+		case <-time.After(50 * time.Millisecond):
+			s.Fail("timeout")
+			return
+		}
+	}
+}
+
+func (s *integrationTestSuite) Test_Integration_Receive_Clear() {
+	input, _ := hex.DecodeString(
+		`adbccbda00000002000000030000000657534a542d58`)
+	expected := wsjtx.ClearMessage{
+		Id: "WSJT-X",
+	}
+	_, err := s.fake.SendMessage(input)
+	s.Require().NoError(err)
+
+	for {
+		select {
+		case msg := <-s.msgChan:
+			switch msg.(type) {
+			case wsjtx.ClearMessage:
+				actual := msg.(wsjtx.ClearMessage)
+				s.Require().Equal(expected, actual)
+				return
+			default:
+				s.Failf("wrong message type", "expected type %T but got %T",
+					wsjtx.ClearMessage{}, msg)
+				return
+			}
+		case err := <-s.errChan:
+			s.Require().NoError(err)
+			return
+		case <-time.After(50 * time.Millisecond):
 			s.Fail("timeout")
 			return
 		}
