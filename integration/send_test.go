@@ -159,16 +159,16 @@ func (s *integrationTestSuite) TestSendConfigure() {
 	msg := wsjtx.ConfigureMessage{
 		Id:                 "WSJT-X",
 		Mode:               "JT9",
-		FrequencyTolerance: math.MaxInt32,
+		FrequencyTolerance: math.MaxUint32,
 		Submode:            "",
 		FastMode:           false,
-		TRPeriod:           math.MaxInt32,
-		RxDF:               1500,
+		TRPeriod:           0,
+		RxDF:               math.MaxUint32,
 		DXCall:             "KI6NAZ",
 		DXGrid:             "DM03",
 		GenerateMessages:   false,
 	}
-	want := decode(`adbccbda000000020000000f0000000657534a542d58000000034a54397fffffffffffffff007fffffff000005dc000000064b49364e415a00000004444d303300`)
+	want := decode(`adbccbda000000020000000f0000000657534a542d58000000034a5439ffffffffffffffff0000000000ffffffff000000064b49364e415a00000004444d303300`)
 
 	s.T().Log("sending configure struct")
 	err := s.server.Configure(msg)
