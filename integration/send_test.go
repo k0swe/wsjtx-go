@@ -18,7 +18,7 @@ func (s *integrationTestSuite) TestSendHeartbeat() {
 		Revision:  "0d9b96"}
 	want := decode(`adbccbda00000002000000000000000657534a542d580000000300000005322e322e3200000006306439623936`)
 
-	s.T().Log("test case sending heartbeat struct")
+	s.T().Log("sending heartbeat struct")
 	err := s.server.Heartbeat(msg)
 	s.Require().NoError(err)
 	s.waitForReceiveAndCheck(want)
@@ -30,7 +30,7 @@ func (s *integrationTestSuite) TestSendClear() {
 	msg := wsjtx.ClearMessage{Id: "WSJT-X", Window: 2}
 	want := decode(`adbccbda00000002000000030000000657534a542d5802`)
 
-	s.T().Log("test case sending clear struct")
+	s.T().Log("sending clear struct")
 	err := s.server.Clear(msg)
 	s.Require().NoError(err)
 	s.waitForReceiveAndCheck(want)
@@ -52,7 +52,7 @@ func (s *integrationTestSuite) TestSendReply() {
 	}
 	want := decode(`adbccbda00000002000000040000000657534a542d58000004d2fffffff13fe000000000000000000929000000034654380000000d4351204b3053574520444d37390000`)
 
-	s.T().Log("test case sending reply struct")
+	s.T().Log("sending reply struct")
 	err := s.server.Reply(msg)
 	s.Require().NoError(err)
 	s.waitForReceiveAndCheck(want)
@@ -64,7 +64,7 @@ func (s *integrationTestSuite) TestSendClose() {
 	msg := wsjtx.CloseMessage{Id: "WSJT-X"}
 	want := decode(`adbccbda00000002000000060000000657534a542d58`)
 
-	s.T().Log("test case sending close struct")
+	s.T().Log("sending close struct")
 	err := s.server.Close(msg)
 	s.Require().NoError(err)
 	s.waitForReceiveAndCheck(want)
@@ -76,7 +76,7 @@ func (s *integrationTestSuite) TestSendReplay() {
 	msg := wsjtx.ReplayMessage{Id: "WSJT-X"}
 	want := decode(`adbccbda00000002000000070000000657534a542d58`)
 
-	s.T().Log("test case sending replay struct")
+	s.T().Log("sending replay struct")
 	err := s.server.Replay(msg)
 	s.Require().NoError(err)
 	s.waitForReceiveAndCheck(want)
@@ -88,7 +88,7 @@ func (s *integrationTestSuite) TestSendHaltTx() {
 	msg := wsjtx.HaltTxMessage{Id: "WSJT-X", AutoTxOnly: false}
 	want := decode(`adbccbda00000002000000080000000657534a542d5800`)
 
-	s.T().Log("test case sending haltTx struct")
+	s.T().Log("sending haltTx struct")
 	err := s.server.HaltTx(msg)
 	s.Require().NoError(err)
 	s.waitForReceiveAndCheck(want)
@@ -104,7 +104,7 @@ func (s *integrationTestSuite) TestSendFreeText() {
 	}
 	want := decode(`adbccbda00000002000000090000000657534a542d58000000114a3732494d53204b3053574520522d313501`)
 
-	s.T().Log("test case sending freeText struct")
+	s.T().Log("sending freeText struct")
 	err := s.server.FreeText(msg)
 	s.Require().NoError(err)
 	s.waitForReceiveAndCheck(want)
@@ -116,7 +116,7 @@ func (s *integrationTestSuite) TestSendLocation() {
 	msg := wsjtx.LocationMessage{Id: "WSJT-X", Location: "DM79jx"}
 	want := decode(`adbccbda000000020000000b0000000657534a542d5800000006444d37396a78`)
 
-	s.T().Log("test case sending location struct")
+	s.T().Log("sending location struct")
 	err := s.server.Location(msg)
 	s.Require().NoError(err)
 	s.waitForReceiveAndCheck(want)
@@ -135,7 +135,7 @@ func (s *integrationTestSuite) TestSendHighlightCallsign() {
 	}
 	want := decode(`adbccbda000000020000000d0000000657534a542d58000000064b4d3441434b010000ffff00000000000001ffff000000000000000001`)
 
-	s.T().Log("test case sending highlightCallsign struct")
+	s.T().Log("sending highlightCallsign struct")
 	err := s.server.HighlightCallsign(msg)
 	s.Require().NoError(err)
 	s.waitForReceiveAndCheck(want)
@@ -147,7 +147,7 @@ func (s *integrationTestSuite) TestSendSwitchConfiguration() {
 	msg := wsjtx.SwitchConfigurationMessage{Id: "WSJT-X", ConfigurationName: "IC-7300"}
 	want := decode(`adbccbda000000020000000e0000000657534a542d580000000749432d37333030`)
 
-	s.T().Log("test case sending switchConfiguration struct")
+	s.T().Log("sending switchConfiguration struct")
 	err := s.server.SwitchConfiguration(msg)
 	s.Require().NoError(err)
 	s.waitForReceiveAndCheck(want)
@@ -170,7 +170,7 @@ func (s *integrationTestSuite) TestSendConfigure() {
 	}
 	want := decode(`adbccbda000000020000000f0000000657534a542d58000000034a54397fffffffffffffff007fffffff000005dc000000064b49364e415a00000004444d303300`)
 
-	s.T().Log("test case sending configure struct")
+	s.T().Log("sending configure struct")
 	err := s.server.Configure(msg)
 	s.Require().NoError(err)
 	s.waitForReceiveAndCheck(want)
@@ -180,7 +180,7 @@ func (s *integrationTestSuite) waitForReceiveAndCheck(want []byte) {
 	for {
 		select {
 		case got := <-s.fake.ReceiveChan:
-			s.T().Log("test case got receive bytes back from fake")
+			s.T().Log("got receive bytes back from fake")
 			s.Require().Equal(want, got)
 			return
 		case <-time.After(50 * time.Millisecond):

@@ -10,6 +10,8 @@ import (
 	"time"
 )
 
+// WsjtxFake is a test double that acts like WSJTX. It connects to the wsjtx-go server as a client,
+// but is actually a stub controlled by the integration test cases.
 type WsjtxFake struct {
 	t           *testing.T
 	conn        *net.UDPConn
@@ -32,17 +34,17 @@ func NewFake(addr *net.UDPAddr, t *testing.T) (*WsjtxFake, error) {
 
 // SendMessage immediately sends the given payload out from the WSJTX fake.
 func (w *WsjtxFake) SendMessage(payload []byte) (int, error) {
-	w.t.Log("fake is sending message")
+	w.t.Log("sending message")
 	return w.conn.Write(payload)
 }
 
 func (w *WsjtxFake) handleReceive() {
 	b := make([]byte, 2048)
-	w.t.Log("fake is listening for receives")
+	w.t.Log("listening for receives")
 	for {
 		select {
 		case <-w.stop:
-			w.t.Log("fake is stopping")
+			w.t.Log("stopping")
 			close(w.ReceiveChan)
 			_ = w.conn.Close()
 			return
@@ -51,13 +53,13 @@ func (w *WsjtxFake) handleReceive() {
 			n, err := w.conn.Read(b)
 			if err != nil {
 				if err != io.EOF && !errors.Is(err, os.ErrDeadlineExceeded) {
-					w.t.Log(fmt.Errorf("fake got an error while reading UDP: %w", err))
+					w.t.Log(fmt.Errorf("got an error while reading UDP: %w", err))
 				}
 			}
 			if n > 0 {
 				tmp := make([]byte, n)
 				copy(tmp, b[:n])
-				w.t.Logf("fake received %d bytes, putting on channel", n)
+				w.t.Logf("received %d bytes, putting on channel", n)
 				w.ReceiveChan <- tmp
 			}
 		}
