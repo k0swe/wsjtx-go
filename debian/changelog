@@ -1,3 +1,10 @@
+golang-github-k0swe-wsjtx-go (3.2.0-1) UNRELEASED; urgency=medium
+
+  * Added NotConnectedError to make failed send commands more obvious
+  * Added integration tests for all major functions
+
+ -- Chris Keller <xylo04@gmail.com>  Fri, 19 Nov 2021 18:27:00 -0600
+
 golang-github-k0swe-wsjtx-go (3.1.0-1) UNRELEASED; urgency=medium
 
   * Update message types
