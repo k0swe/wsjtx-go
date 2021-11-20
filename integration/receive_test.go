@@ -23,10 +23,10 @@ func (s *integrationTestSuite) TestReceiveCases() {
 	tests := []receiveCase{
 		{
 			name: "Heartbeat",
-			args: decode(`adbccbda00000002000000000000000657534a542d580000000300000005322e322e3200000006306439623936`),
+			args: decode(`adbccbda00000002000000000000000657534a542d580000000200000005322e322e3200000006306439623936`),
 			want: receiveResult{wsjtx.HeartbeatMessage{
 				Id:        "WSJT-X",
-				MaxSchema: 3,
+				MaxSchema: 2,
 				Version:   "2.2.2",
 				Revision:  "0d9b96",
 			}, nil},

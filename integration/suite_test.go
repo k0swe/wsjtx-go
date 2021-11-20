@@ -2,7 +2,9 @@ package integration
 
 import (
 	"net"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/k0swe/wsjtx-go/v3"
 	"github.com/stretchr/testify/suite"
@@ -10,7 +12,7 @@ import (
 
 type integrationTestSuite struct {
 	suite.Suite
-	stub    wsjtx.Server
+	server  wsjtx.Server
 	msgChan chan interface{}
 	errChan chan error
 	fake    *WsjtxFake
@@ -24,18 +26,22 @@ func (s *integrationTestSuite) SetupSuite() {
 	var err error
 	s.msgChan = make(chan interface{}, 5)
 	s.errChan = make(chan error, 5)
-	s.stub, err = wsjtx.MakeServerGiven(net.ParseIP("127.0.0.1"), 0)
+	s.server, err = wsjtx.MakeServerGiven(net.ParseIP("127.0.0.1"), 0)
 	s.Require().NoError(err)
-	go s.stub.ListenToWsjtx(s.msgChan, s.errChan)
-
+	go s.server.ListenToWsjtx(s.msgChan, s.errChan)
+	s.T().Log("suite started server listening")
+	time.Sleep(100 * time.Millisecond)
 }
 
 func (s *integrationTestSuite) SetupTest() {
+	_, portStr, _ := net.SplitHostPort(s.server.LocalAddr().String())
+	port, _ := strconv.Atoi(portStr)
 	var err error
-	s.fake, err = NewFake(s.stub.LocalAddr())
+	s.fake, err = NewFake(&net.UDPAddr{Port: port}, s.T())
 	s.Require().NoError(err)
+	s.T().Log("suite reports fake is connected")
 }
 
 func (s *integrationTestSuite) TearDownTest() {
-	s.fake = &WsjtxFake{}
+	s.fake.Stop()
 }
