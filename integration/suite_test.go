@@ -4,7 +4,6 @@ import (
 	"net"
 	"strconv"
 	"testing"
-	"time"
 
 	"github.com/k0swe/wsjtx-go/v3"
 	"github.com/stretchr/testify/suite"
@@ -30,7 +29,6 @@ func (s *integrationTestSuite) SetupSuite() {
 	s.Require().NoError(err)
 	go s.server.ListenToWsjtx(s.msgChan, s.errChan)
 	s.T().Log("suite started server listening")
-	time.Sleep(100 * time.Millisecond)
 }
 
 func (s *integrationTestSuite) SetupTest() {
