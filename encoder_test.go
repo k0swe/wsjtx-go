@@ -2,7 +2,6 @@ package wsjtx
 
 import (
 	"encoding/hex"
-	"image/color"
 	"reflect"
 	"testing"
 )
@@ -292,8 +291,8 @@ func Test_encodeHighlightCallsign(t *testing.T) {
 			args: args{msg: HighlightCallsignMessage{
 				Id:              "WSJT-X",
 				Callsign:        "KM4ACK",
-				BackgroundColor: color.RGBA{R: 0xeb, G: 0x40, B: 0x34, A: 0xff},
-				ForegroundColor: color.RGBA{R: 0x25, G: 0x27, B: 0x2e, A: 0xff},
+				BackgroundColor: "#eb4034",
+				ForegroundColor: "#25272e",
 				HighlightLast:   true,
 				Reset:           false,
 			}},
@@ -305,8 +304,8 @@ func Test_encodeHighlightCallsign(t *testing.T) {
 			args: args{msg: HighlightCallsignMessage{
 				Id:              "WSJT-X",
 				Callsign:        "KM4ACK",
-				BackgroundColor: color.RGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xff},
-				ForegroundColor: color.RGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xff},
+				BackgroundColor: "white",
+				ForegroundColor: "white",
 				HighlightLast:   false,
 				Reset:           true,
 			}},

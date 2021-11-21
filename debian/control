@@ -8,6 +8,7 @@ Build-Depends: debhelper-compat (= 13),
                dh-golang,
                golang-any (>= 2:1.15~1),
                golang-github-leemcloughlin-jdn-dev,
+               golang-github-mazznoer-csscolorparser-dev,
                golang-github-stretchr-testify-dev
 Standards-Version: 4.5.0
 Vcs-Browser: https://salsa.debian.org/go-team/packages/golang-github-k0swe-wsjtx-go

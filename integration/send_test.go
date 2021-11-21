@@ -1,7 +1,6 @@
 package integration
 
 import (
-	"image/color"
 	"math"
 	"time"
 
@@ -128,12 +127,12 @@ func (s *integrationTestSuite) TestSendHighlightCallsign() {
 	msg := wsjtx.HighlightCallsignMessage{
 		Id:              "WSJT-X",
 		Callsign:        "KM4ACK",
-		BackgroundColor: color.RGBA{R: 255},
-		ForegroundColor: color.Black,
+		BackgroundColor: "red",
+		ForegroundColor: "black",
 		HighlightLast:   true,
 		Reset:           false,
 	}
-	want := decode(`adbccbda000000020000000d0000000657534a542d58000000064b4d3441434b010000ffff00000000000001ffff000000000000000001`)
+	want := decode(`adbccbda000000020000000d0000000657534a542d58000000064b4d3441434b01ffffffff00000000000001ffff000000000000000001`)
 
 	s.T().Log("sending highlightCallsign struct")
 	err := s.server.HighlightCallsign(msg)

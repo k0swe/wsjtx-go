@@ -3,8 +3,9 @@ package wsjtx
 import (
 	"bytes"
 	"encoding/binary"
-	"image/color"
 	"math"
+
+	"github.com/mazznoer/csscolorparser"
 )
 
 func encodeHeartbeat(msg HeartbeatMessage) ([]byte, error) {
@@ -84,8 +85,12 @@ func encodeHighlightCallsign(msg HighlightCallsignMessage) ([]byte, error) {
 	e.encodeUint32(highlightCallsignNum)
 	e.encodeUtf8(msg.Id)
 	e.encodeUtf8(msg.Callsign)
-	e.encodeColor(msg.BackgroundColor, msg.Reset)
-	e.encodeColor(msg.ForegroundColor, msg.Reset)
+	if err := e.encodeColor(msg.BackgroundColor, msg.Reset); err != nil {
+		return []byte{}, err
+	}
+	if err := e.encodeColor(msg.ForegroundColor, msg.Reset); err != nil {
+		return []byte{}, err
+	}
 	e.encodeBool(msg.HighlightLast)
 	return e.finish()
 }
@@ -175,7 +180,7 @@ func (e encoder) encodeUtf8(str string) {
 	e.buf.WriteString(str)
 }
 
-func (e encoder) encodeColor(color color.Color, invalid bool) {
+func (e encoder) encodeColor(color string, invalid bool) error {
 	// Spec enum: https://github.com/radekp/qt/blob/b881d8fb/src/gui/painting/qcolor.h#L70
 	const invalidSpec = uint8(0)
 	const rgbSpec = uint8(1)
@@ -187,7 +192,11 @@ func (e encoder) encodeColor(color color.Color, invalid bool) {
 	}
 
 	// pre-multiplied to range 0x0 to 0xffff
-	r, g, b, a := color.RGBA()
+	c, err := csscolorparser.Parse(color)
+	if err != nil {
+		return err
+	}
+	r, g, b, a := c.RGBA()
 
 	// Field type and order: https://github.com/radekp/qt/blob/b881d8fb/src/gui/painting/qcolor.cpp#L2506
 	e.encodeUint8(spec)
@@ -196,6 +205,7 @@ func (e encoder) encodeColor(color color.Color, invalid bool) {
 	e.encodeUint16(uint16(g))
 	e.encodeUint16(uint16(b))
 	e.encodeUint16(pad)
+	return nil
 }
 
 func (e encoder) finish() ([]byte, error) {
