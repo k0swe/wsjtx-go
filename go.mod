@@ -1,4 +1,4 @@
-module github.com/k0swe/wsjtx-go/v3
+module github.com/k0swe/wsjtx-go/v4
 
 go 1.15
 

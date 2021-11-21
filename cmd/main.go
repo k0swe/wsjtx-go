@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/k0swe/wsjtx-go/v3"
+	"github.com/k0swe/wsjtx-go/v4"
 )
 
 // Simple driver binary for wsjtx-go library.

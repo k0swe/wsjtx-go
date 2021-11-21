@@ -4,7 +4,7 @@ import (
 	"math"
 	"time"
 
-	"github.com/k0swe/wsjtx-go/v3"
+	"github.com/k0swe/wsjtx-go/v4"
 )
 
 func (s *integrationTestSuite) TestSendHeartbeat() {

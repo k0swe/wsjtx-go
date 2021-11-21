@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/k0swe/wsjtx-go/v3"
+	"github.com/k0swe/wsjtx-go/v4"
 	"github.com/stretchr/testify/suite"
 )
 
