@@ -2,10 +2,7 @@ package wsjtx
 
 import (
 	"image/color"
-	"strings"
 	"time"
-
-	"github.com/mazznoer/csscolorparser"
 )
 
 /*
@@ -311,11 +308,11 @@ In only.
 https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l444
 */
 type HighlightCallsignMessage struct {
-	Id              string   `json:"id"`
-	Callsign        string   `json:"callsign"`
-	BackgroundColor cssColor `json:"backgroundColor"`
-	ForegroundColor cssColor `json:"foregroundColor"`
-	HighlightLast   bool     `json:"highlightLast"`
+	Id              string      `json:"id"`
+	Callsign        string      `json:"callsign"`
+	BackgroundColor color.Color `json:"backgroundColor"`
+	ForegroundColor color.Color `json:"foregroundColor"`
+	HighlightLast   bool        `json:"highlightLast"`
 	// This field is not part of the WSJT-X message and is specific to the golang library. It is a
 	// necessary addition to be able to reset the highlighting. QT's color has a sentinel value in
 	// QColor to signal an "invalid" color; golang image/color doesn't have that, so we add this
@@ -324,32 +321,6 @@ type HighlightCallsignMessage struct {
 }
 
 const highlightCallsignNum = 13
-
-type cssColor struct {
-	color.Color
-}
-
-func (wc *cssColor) UnmarshalJSON(dat []byte) error {
-	s := string(dat)
-	if strings.HasPrefix(s, "\"") {
-		s = s[1:]
-	}
-	if strings.HasSuffix(s, "\"") {
-		s = s[:len(s)-1]
-	}
-	c, err := csscolorparser.Parse(s)
-	if err != nil {
-		return err
-	}
-	r, g, b, a := c.RGBA()
-	wc.Color = color.RGBA{
-		R: uint8(r),
-		G: uint8(g),
-		B: uint8(b),
-		A: uint8(a),
-	}
-	return nil
-}
 
 /*
 The server  may send  this message at  any time.   The message
