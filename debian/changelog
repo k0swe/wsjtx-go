@@ -1,3 +1,9 @@
+golang-github-k0swe-wsjtx-go (4.0.1-1ubuntu1) UNRELEASED; urgency=medium
+
+  * Update deps
+
+ -- Chris Keller <xylo04@gmail.com>  Tue, 22 Mar 2022 18:37:29 -0600
+
 golang-github-k0swe-wsjtx-go (4.0.0-1) UNRELEASED; urgency=medium
 
   * Changed HighlightCallsignMessage to use strings for colors
