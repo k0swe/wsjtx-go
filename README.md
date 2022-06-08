@@ -21,3 +21,23 @@ From this directory:
 ```shell script
 go run cmd/main.go
 ```
+
+## Packaging for Debian Linux (incl. Raspberry Pi)
+
+Create `chroot`:
+```shell
+sudo apt install build-essential debhelper dh-golang sbuild autorevision fakeroot
+export ARCH=$(dpkg --print-architecture)
+sudo sbuild-createchroot unstable /srv/chroot/unstable-"$ARCH" http://deb.debian.org/debian
+sudo sbuild-adduser $USER
+```
+
+Update `chroot`:
+```shell
+sudo sbuild-update -udcar `ls /srv/chroot/`
+```
+
+Build `.deb` file:
+```shell
+make deb-package
+```
