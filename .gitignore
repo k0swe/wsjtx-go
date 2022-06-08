@@ -2,5 +2,6 @@
 wsjtx-go
 
 .idea/
+.vscode/
 
 .pc
