@@ -5,17 +5,13 @@ on: [push, pull_request]
 jobs:
   test:
     name: Run unit tests
-    strategy:
-      matrix:
-        go-version: [ 1.15.x ]
-        os: [ ubuntu-latest ]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     steps:
       - name: Install Go
         uses: actions/setup-go@v3
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: 1.19.x
 
       - name: Checkout code
         uses: actions/checkout@v3
