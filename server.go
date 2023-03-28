@@ -16,9 +16,10 @@ const multicastAddr = "224.0.0.1"
 const wsjtxPort = 2237
 
 type Server struct {
-	conn       *net.UDPConn
-	remoteAddr *net.UDPAddr
-	listening  bool
+	ServingAddr net.Addr
+	conn        *net.UDPConn
+	remoteAddr  *net.UDPAddr
+	listening   bool
 }
 
 var NotConnectedError = fmt.Errorf("haven't heard from wsjtx yet, don't know where to send commands")
@@ -37,7 +38,7 @@ func MakeServer() (Server, error) {
 }
 
 // MakeServerGiven creates a UDP connection to communicate with WSJT-X on the given address and
-// port.
+// port. Port 0 is allowed, and will cause the OS to assign a port number.
 func MakeServerGiven(ipAddr net.IP, port uint) (Server, error) {
 	addr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%v:%d", ipAddr, port))
 	if err != nil {
@@ -55,7 +56,7 @@ func MakeServerGiven(ipAddr net.IP, port uint) (Server, error) {
 	if conn == nil {
 		return Server{}, errors.New("wsjtx udp connection not opened")
 	}
-	return Server{conn, nil, false}, nil
+	return Server{conn.LocalAddr(), conn, nil, false}, nil
 }
 
 func (s *Server) LocalAddr() net.Addr {
