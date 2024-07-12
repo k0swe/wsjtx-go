@@ -37,7 +37,7 @@ func parseMessage(buffer []byte, length int) (interface{}, error) {
 	if err != nil {
 		return nil, ParseError
 	}
-	if sch != schema {
+	if !supportedSchemas[sch] {
 		return nil, fmt.Errorf("%w: got a schema version I wasn't expecting: %d", ParseError, sch)
 	}
 

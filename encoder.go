@@ -127,7 +127,7 @@ func newEncoder() encoder {
 	e := encoder{bytes.NewBuffer(make([]byte, bufLen))}
 	e.buf.Reset()
 	e.encodeUint32(magic)
-	e.encodeUint32(schema)
+	e.encodeUint32(qDataStream5_2)
 	return e
 }
 

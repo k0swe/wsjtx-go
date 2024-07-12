@@ -8,12 +8,19 @@ import (
 )
 
 const magic = 0xadbccbda
-const schema = 2
 const qDataStreamNull = 0xffffffff
 const bufLen = 1024
 const localhostAddr = "127.0.0.1"
 const multicastAddr = "224.0.0.1"
 const wsjtxPort = 2237
+
+const qDataStream5_2 uint32 = 2
+const qDataStream5_4 uint32 = 3
+
+var supportedSchemas = map[uint32]bool{
+	qDataStream5_2: true,
+	qDataStream5_4: true,
+}
 
 type Server struct {
 	ServingAddr net.Addr
