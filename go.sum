@@ -2,8 +2,6 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/leemcloughlin/jdn v0.0.0-20201102080031-6f88db6a6bf2 h1:CdyD5OzAIzNFzpJ9WQRjJWj4pVRxZ9v15xdHnhvUPdw=
 github.com/leemcloughlin/jdn v0.0.0-20201102080031-6f88db6a6bf2/go.mod h1:LAowglanJPLb6WYSx3D1Ht/XE54OGIr0i4mz9kdbXrs=
-github.com/mazznoer/csscolorparser v0.1.4 h1:1bAWPWdoMc5qdAXVlixS9rpZLw/vaq5InX/lj3tfRQQ=
-github.com/mazznoer/csscolorparser v0.1.4/go.mod h1:OQRVvgCyHDCAquR1YWfSwwaDcM0LhnSffGnlbOew/3I=
 github.com/mazznoer/csscolorparser v0.1.5 h1:Wr4uNIE+pHWN3TqZn2SGpA2nLRG064gB7WdSfSS5cz4=
 github.com/mazznoer/csscolorparser v0.1.5/go.mod h1:OQRVvgCyHDCAquR1YWfSwwaDcM0LhnSffGnlbOew/3I=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
