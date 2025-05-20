@@ -4,6 +4,8 @@ github.com/leemcloughlin/jdn v0.0.0-20201102080031-6f88db6a6bf2 h1:CdyD5OzAIzNFz
 github.com/leemcloughlin/jdn v0.0.0-20201102080031-6f88db6a6bf2/go.mod h1:LAowglanJPLb6WYSx3D1Ht/XE54OGIr0i4mz9kdbXrs=
 github.com/mazznoer/csscolorparser v0.1.5 h1:Wr4uNIE+pHWN3TqZn2SGpA2nLRG064gB7WdSfSS5cz4=
 github.com/mazznoer/csscolorparser v0.1.5/go.mod h1:OQRVvgCyHDCAquR1YWfSwwaDcM0LhnSffGnlbOew/3I=
+github.com/mazznoer/csscolorparser v0.1.6 h1:uK6p5zBA8HaQZJSInHgHVmkVBodUAy+6snSmKJG7pqA=
+github.com/mazznoer/csscolorparser v0.1.6/go.mod h1:OQRVvgCyHDCAquR1YWfSwwaDcM0LhnSffGnlbOew/3I=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/testify v1.10.0 h1:Xv5erBjTwe/5IxqUQTdXv5kgmIvbHo3QQyRwhJsOfJA=
