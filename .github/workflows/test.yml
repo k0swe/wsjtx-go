@@ -11,6 +11,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
+          # https://packages.debian.org/bookworm/golang
           go-version: 1.19.x
 
       - name: Checkout code
