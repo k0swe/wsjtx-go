@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/leemcloughlin/jdn v0.0.0-20201102080031-6f88db6a6bf2
 	github.com/mazznoer/csscolorparser v0.1.6
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 )
 
 require (
