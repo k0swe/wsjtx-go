@@ -118,6 +118,8 @@ func (p *parser) parseHeartbeat() (HeartbeatMessage, error) {
 	heartbeatMessage.Id, err = p.parseUtf8()
 	heartbeatMessage.MaxSchema, err = p.parseUint32()
 	heartbeatMessage.Version, err = p.parseUtf8()
+
+	// JTDX Packet
 	if !p.isDataAvailable() {
 		return heartbeatMessage, err
 	}
