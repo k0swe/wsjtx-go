@@ -14,7 +14,7 @@ jobs:
           go-version: 1.19.x
 
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Update Go dependencies
         run: |
