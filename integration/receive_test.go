@@ -231,7 +231,6 @@ func (s *integrationTestSuite) TestReceiveCases() {
 				Callsign:  "JA5NVN",
 				Grid:      "PM74",
 				Power:     30,
-				OffAir:    false,
 			}, nil},
 		},
 		{
