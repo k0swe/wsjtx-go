@@ -32,6 +32,17 @@ func (s *integrationTestSuite) TestReceiveCases() {
 			}, nil},
 		},
 		{
+			name: "Heartbeat (JTDX)",
+			args: decode(`adbccbda0000000200000000000000044a5444580000000300000007322e322e313539`),
+			want: receiveResult{
+				wsjtx.HeartbeatMessage{
+					Id:        "JTDX",
+					MaxSchema: 3,
+					Version:   "2.2.159",
+				}, nil,
+			},
+		},
+		{
 			name: "Status 2.2.2",
 			args: decode(`adbccbda00000002000000010000000657534a542d5800000000006bf0d000000003465438ffffffff000000032d313500000003465438000000000003730000079e000000054b3053574500000006444d37394c56ffffffff00ffffffff0000ffffffffffffffff0000000744656661756c74`),
 			want: receiveResult{wsjtx.StatusMessage{
@@ -87,6 +98,31 @@ func (s *integrationTestSuite) TestReceiveCases() {
 			}, nil},
 		},
 		{
+			name: "Status (JTDX)",
+			args: decode(`adbccbda0000000200000001000000044a5444580000000000d6c09000000003465438ffffffff000000022d33000000034654380000010000083a0000083a00000006424735564c49000000044f4c3934ffffffff00ffffffff0000`),
+			want: receiveResult{
+				wsjtx.StatusMessage{
+					Id:            "JTDX",
+					DialFrequency: 14074000,
+					Mode:          "FT8",
+					DxCall:        "",
+					Report:        "-3",
+					TxMode:        "FT8",
+					TxEnabled:     false,
+					Transmitting:  false,
+					Decoding:      true,
+					RxDF:          2106,
+					TxDF:          2106,
+					DeCall:        "BG5VLI",
+					DeGrid:        "OL94",
+					DxGrid:        "",
+					TxWatchdog:    false,
+					SubMode:       "",
+					FastMode:      false,
+				}, nil,
+			},
+		},
+		{
 			name: "Decode",
 			args: decode(`adbccbda00000002000000020000000657534a542d58010259baf8fffffffb3fc99999a000000000000516000000017e0000000e4a4132454a50204e3442502037330000`),
 			want: receiveResult{wsjtx.DecodeMessage{
@@ -134,6 +170,30 @@ func (s *integrationTestSuite) TestReceiveCases() {
 			}, nil},
 		},
 		{
+			name: "QSO Logged (JTDX)",
+			args: decode(`adbccbda0000000200000005000000044a5444580000000000258d7602af9185000000000454335354000000044a4b37330000000000d6c66c00000003465438000000032d3135000000032d31350000000232300000001244697374616e63653a203130373733206b6d00000005536d6974680000000000258d7602ae760d0000000006424735564c4900000006424735564c49000000044f4c3934`),
+			want: receiveResult{
+				msg: wsjtx.QsoLoggedMessage{
+					Id:             "JTDX",
+					DateTimeOff:    parseTime("2026-01-05 12:31:00 +0800 CST"),
+					DxCall:         "T3ST",
+					DxGrid:         "JK73",
+					TxFrequency:    14075500,
+					Mode:           "FT8",
+					ReportSent:     "-15",
+					ReportReceived: "-15",
+					TxPower:        "20",
+					Comments:       "Distance: 10773 km",
+					Name:           "Smith",
+					DateTimeOn:     parseTime("2026-01-05 12:29:47 +0800 CST"),
+					OperatorCall:   "BG5VLI",
+					MyCall:         "BG5VLI",
+					MyGrid:         "OL94",
+				},
+				err: nil,
+			},
+		},
+		{
 			name: "Close",
 			args: decode(`adbccbda00000002000000060000000657534a542d58`),
 			want: receiveResult{wsjtx.CloseMessage{
@@ -154,6 +214,23 @@ func (s *integrationTestSuite) TestReceiveCases() {
 				Callsign:  "K6TGW",
 				Grid:      "CM95",
 				Power:     23,
+				OffAir:    false,
+			}, nil},
+		},
+		{
+			name: "WSPR Decode (JTDX)",
+			args: decode(`adbccbda000000020000000a000000044a544458010277b6c0ffffffe43fe00000000000000000000000d71b1700000000000000064a41354e564e00000004504d37340000001e00`),
+			want: receiveResult{wsjtx.WSPRDecodeMessage{
+				Id:        "JTDX",
+				New:       true,
+				Time:      41400000,
+				Snr:       -28,
+				DeltaTime: 0.5,
+				Frequency: 14097175,
+				Drift:     0,
+				Callsign:  "JA5NVN",
+				Grid:      "PM74",
+				Power:     30,
 				OffAir:    false,
 			}, nil},
 		},
