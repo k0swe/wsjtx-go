@@ -118,6 +118,11 @@ func (p *parser) parseHeartbeat() (HeartbeatMessage, error) {
 	heartbeatMessage.Id, err = p.parseUtf8()
 	heartbeatMessage.MaxSchema, err = p.parseUint32()
 	heartbeatMessage.Version, err = p.parseUtf8()
+
+	// JTDX Packet
+	if !p.isDataAvailable() {
+		return heartbeatMessage, err
+	}
 	heartbeatMessage.Revision, err = p.parseUtf8()
 	return heartbeatMessage, err
 }
@@ -142,6 +147,12 @@ func (p *parser) parseStatus() (StatusMessage, error) {
 	statusMessage.TxWatchdog, err = p.parseBool()
 	statusMessage.SubMode, err = p.parseUtf8()
 	statusMessage.FastMode, err = p.parseBool()
+
+	// A JTDX Format packet (Tx first, bool)
+	if (p.length - p.cursor) == 1 {
+		_, _ = p.parseBool()
+		return statusMessage, err
+	}
 	statusMessage.SpecialOperationMode, err = p.parseUint8()
 	statusMessage.FrequencyTolerance, err = p.parseUint32()
 	statusMessage.TRPeriod, err = p.parseUint32()
@@ -191,9 +202,18 @@ func (p *parser) parseQsoLogged() (QsoLoggedMessage, error) {
 	qsoLoggedMessage.OperatorCall, err = p.parseUtf8()
 	qsoLoggedMessage.MyCall, err = p.parseUtf8()
 	qsoLoggedMessage.MyGrid, err = p.parseUtf8()
+
+	// JTDX Packet
+	if !p.isDataAvailable() {
+		return qsoLoggedMessage, err
+	}
 	qsoLoggedMessage.ExchangeSent, err = p.parseUtf8()
 	qsoLoggedMessage.ExchangeReceived, err = p.parseUtf8()
-	qsoLoggedMessage.ADIFPropagationMode, err = p.parseUtf8()
+
+	// Older WSJT-X packet doesn't have Propagation Mode
+	if p.isDataAvailable() {
+		qsoLoggedMessage.ADIFPropagationMode, err = p.parseUtf8()
+	}
 	return qsoLoggedMessage, err
 }
 
@@ -217,6 +237,11 @@ func (p *parser) parseWsprDecode() (WSPRDecodeMessage, error) {
 	wsprDecodeMessage.Callsign, err = p.parseUtf8()
 	wsprDecodeMessage.Grid, err = p.parseUtf8()
 	wsprDecodeMessage.Power, err = p.parseInt32()
+
+	// JTDX Packet
+	if !p.isDataAvailable() {
+		return wsprDecodeMessage, err
+	}
 	wsprDecodeMessage.OffAir, err = p.parseBool()
 	return wsprDecodeMessage, err
 }
@@ -326,4 +351,8 @@ func (p *parser) parseQDateTime() (time.Time, error) {
 		return value, fmt.Errorf("got a timespec I wasn't expecting: %d", timespec)
 	}
 	return value, err
+}
+
+func (p *parser) isDataAvailable() bool {
+	return p.cursor < p.length
 }
