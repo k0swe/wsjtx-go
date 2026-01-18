@@ -175,7 +175,7 @@ func (s *integrationTestSuite) TestReceiveCases() {
 			want: receiveResult{
 				msg: wsjtx.QsoLoggedMessage{
 					Id:             "JTDX",
-					DateTimeOff:    parseTime("2026-01-05 04:31:00 +0000 UTC"),
+					DateTimeOff:    time.Date(2026, time.January, 5, 12, 31, 0, 0, time.Local),
 					DxCall:         "T3ST",
 					DxGrid:         "JK73",
 					TxFrequency:    14075500,
@@ -185,7 +185,7 @@ func (s *integrationTestSuite) TestReceiveCases() {
 					TxPower:        "20",
 					Comments:       "Distance: 10773 km",
 					Name:           "Smith",
-					DateTimeOn:     parseTime("2026-01-05 04:29:47 +0000 UTC"),
+					DateTimeOn:     time.Date(2026, time.January, 5, 12, 29, 47, 0, time.Local),
 					OperatorCall:   "BG5VLI",
 					MyCall:         "BG5VLI",
 					MyGrid:         "OL94",
