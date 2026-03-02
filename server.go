@@ -27,7 +27,6 @@ type Server struct {
 	conn        *net.UDPConn
 	remoteAddr  *net.UDPAddr
 	listening   bool
-	opened      bool
 }
 
 var NotConnectedError = fmt.Errorf("haven't heard from wsjtx yet, don't know where to send commands")
@@ -64,25 +63,21 @@ func MakeServerGiven(ipAddr net.IP, port uint) (Server, error) {
 	if conn == nil {
 		return Server{}, errors.New("wsjtx udp connection not opened")
 	}
-	return Server{conn.LocalAddr(), conn, nil, false, true}, nil
+	return Server{conn.LocalAddr(), conn, nil, false}, nil
 }
 
 func (s *Server) LocalAddr() net.Addr {
 	return s.conn.LocalAddr()
 }
 
-// Shutdown will close the UDP connection to communicate with WSJT-X and set the server
-// connection to nil as well as setting the opened flag to false. The ListenToWsjtx
-// routine will detect that the connection is nill, and will return with no error
-// if the opened flag is false. This will close the channels notifying the client
-// that the ListenToWsjtx has stopped due to the Shutdown command.
+// Shutdown will close the UDP connection to communicate with WSJT-X. The
+// ListenToWsjtx routine will detect that the connection is closed when it
+// receives a net.ErrorClose error from reading the UDP connection
 func (s *Server) Shutdown() error {
 	err := s.conn.Close()
 	if err != nil {
 		return errors.New("problem closing UDP connection")
 	}
-	s.opened = false
-	s.conn = nil
 	return nil
 }
 
@@ -98,15 +93,13 @@ func (s *Server) ListenToWsjtx(c chan interface{}, e chan error) {
 	for {
 		b := make([]byte, bufLen)
 		if s.conn == nil {
-			if !s.opened {
-				e <- errors.New("wsjtx connection is nil")
-			}
+			e <- errors.New("wsjtx connection is nil")
 			s.listening = false
 			return
 		}
 		length, rAddr, err := s.conn.ReadFromUDP(b)
 		if err != nil {
-			if !s.opened {
+			if !errors.Is(err, net.ErrClosed) {
 				e <- fmt.Errorf("problem reading from wsjtx: %w", err)
 			}
 			s.listening = false
