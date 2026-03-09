@@ -70,6 +70,17 @@ func (s *Server) LocalAddr() net.Addr {
 	return s.conn.LocalAddr()
 }
 
+// Shutdown will close the UDP connection to communicate with WSJT-X. The
+// ListenToWsjtx routine will detect that the connection is closed when it
+// receives a net.ErrorClose error from reading the UDP connection
+func (s *Server) Shutdown() error {
+	err := s.conn.Close()
+	if err != nil {
+		return errors.New("problem closing UDP connection")
+	}
+	return nil
+}
+
 // ListenToWsjtx listens for messages from WSJT-X. When heard, the messages are parsed and then
 // placed in the given message channel. If parsing errors occur, those are reported on the errors
 // channel. If a fatal error happens, e.g. the network connection gets closed, the channels are
@@ -88,7 +99,9 @@ func (s *Server) ListenToWsjtx(c chan interface{}, e chan error) {
 		}
 		length, rAddr, err := s.conn.ReadFromUDP(b)
 		if err != nil {
-			e <- fmt.Errorf("problem reading from wsjtx: %w", err)
+			if !errors.Is(err, net.ErrClosed) {
+				e <- fmt.Errorf("problem reading from wsjtx: %w", err)
+			}
 			s.listening = false
 			return
 		}
