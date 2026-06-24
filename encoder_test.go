@@ -403,6 +403,43 @@ func Test_encodeConfigure(t *testing.T) {
 	}
 }
 
+func Test_encodeAnnotationInfo(t *testing.T) {
+	type args struct {
+		msg AnnotationInfoMessage
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    []byte
+		wantErr bool
+	}{
+		{
+			name: "encodeAnnotationInfo",
+			args: args{msg: AnnotationInfoMessage{
+				Id:                "WSJT-X",
+				DXCall:            "W1AW",
+				SortOrderProvided: true,
+				SortOrder:         42,
+			}},
+			want:    decodeHex("adbccbda00000002000000100000000657534a542d580000000457314157010000002a"),
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := encodeAnnotationInfo(tt.args.msg)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("encodeAnnotationInfo() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("encodeAnnotationInfo() got = %v, want %v",
+					hex.EncodeToString(got), hex.EncodeToString(tt.want))
+			}
+		})
+	}
+}
+
 func decodeHex(str string) []byte {
 	bits, _ := hex.DecodeString(str)
 	return bits
