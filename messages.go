@@ -14,7 +14,7 @@ after it receives  the initial heartbeat message  from a client.
 
 Out/In.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l110
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type HeartbeatMessage struct {
 	Id        string `json:"id"`
@@ -32,7 +32,7 @@ client without the need for  polling commands.
 
 Out only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l141
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type StatusMessage struct {
 	Id                   string `json:"id"`
@@ -70,7 +70,7 @@ as a one of these messages  with the 'New' field set to false.
 
 Out only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l208
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type DecodeMessage struct {
 	Id               string  `json:"id"`
@@ -100,7 +100,7 @@ The Window  argument  can be  one  of the  following values:
 
 Out/In.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l234
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type ClearMessage struct {
 	Id     string `json:"id"`
@@ -120,7 +120,7 @@ the "Band activity" window.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l255
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type ReplyMessage struct {
 	Id               string  `json:"id"`
@@ -142,7 +142,7 @@ the "OK" button.
 
 Out only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l295
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type QsoLoggedMessage struct {
 	Id                  string    `json:"id"`
@@ -173,7 +173,7 @@ down gracefully.
 
 Out/In.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l320
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type CloseMessage struct {
 	Id string `json:"id"`
@@ -190,7 +190,7 @@ activity"  window.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l328
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type ReplayMessage struct {
 	Id string `json:"id"`
@@ -205,7 +205,7 @@ using this message.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l343
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type HaltTxMessage struct {
 	Id         string `json:"id"`
@@ -226,7 +226,7 @@ is current.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l352
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type FreeTextMessage struct {
 	Id   string `json:"id"`
@@ -242,7 +242,7 @@ this case the 'New' field is true.
 
 Out only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l383
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type WSPRDecodeMessage struct {
 	Id        string  `json:"id"`
@@ -269,7 +269,7 @@ application  settings.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l406
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type LocationMessage struct {
 	Id       string `json:"id"`
@@ -285,7 +285,7 @@ button.
 
 Out only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l423
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type LoggedAdifMessage struct {
 	Id   string `json:"id"`
@@ -304,7 +304,7 @@ either or both  of the background and  foreground fields.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l444
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type HighlightCallsignMessage struct {
 	Id              string `json:"id"`
@@ -328,7 +328,7 @@ configuration must exist.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l445
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type SwitchConfigurationMessage struct {
 	Id                string `json:"id"`
@@ -347,7 +347,7 @@ silently ignored.
 
 In only.
 
-https://sourceforge.net/p/wsjt/wsjtx/ci/wsjtx-2.5.2/tree/Network/NetworkMessage.hpp#l479
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
 */
 type ConfigureMessage struct {
 	Id                 string `json:"id"`
@@ -363,3 +363,29 @@ type ConfigureMessage struct {
 }
 
 const configureNum = 15
+
+/*
+The server may send this message at any time. Sort orders can be used
+for sorting hound callers when in Fox mode. A typical usage is to
+"score" callsigns based on number of bands and/or modes worked using
+an external logging program during a DXpedition, to be able to give
+preference to calls that have not been worked before on any other
+band or mode.
+
+If SortOrderProvided is true, the message also specifies a numeric
+sort order for the DX call. A sort order of 0xffffffff will remove
+the sort-order value from the internal table. Callsigns without a
+sort order will be valued at zero for sorting purposes.
+
+In only.
+
+https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp
+*/
+type AnnotationInfoMessage struct {
+	Id                 string `json:"id"`
+	DXCall             string `json:"dxCall"`
+	SortOrderProvided  bool   `json:"sortOrderProvided"`
+	SortOrder          uint32 `json:"sortOrder"`
+}
+
+const annotationInfoNum = 16

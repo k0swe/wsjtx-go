@@ -103,6 +103,16 @@ func encodeSwitchConfiguration(msg SwitchConfigurationMessage) ([]byte, error) {
 	return e.finish()
 }
 
+func encodeAnnotationInfo(msg AnnotationInfoMessage) ([]byte, error) {
+	e := newEncoder()
+	e.encodeUint32(annotationInfoNum)
+	e.encodeUtf8(msg.Id)
+	e.encodeUtf8(msg.DXCall)
+	e.encodeBool(msg.SortOrderProvided)
+	e.encodeUint32(msg.SortOrder)
+	return e.finish()
+}
+
 func encodeConfigure(msg ConfigureMessage) ([]byte, error) {
 	e := newEncoder()
 	e.encodeUint32(configureNum)

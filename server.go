@@ -189,6 +189,13 @@ func (s *Server) Configure(msg ConfigureMessage) error {
 	return s.tryWrite(msgBytes)
 }
 
+// AnnotationInfo sends a message to WSJT-X with callsign annotation data, used to
+// provide sort ordering for hound callers in Fox mode.
+func (s *Server) AnnotationInfo(msg AnnotationInfoMessage) error {
+	msgBytes, _ := encodeAnnotationInfo(msg)
+	return s.tryWrite(msgBytes)
+}
+
 func (s *Server) tryWrite(msgBytes []byte) error {
 	if s.remoteAddr == nil {
 		return NotConnectedError
