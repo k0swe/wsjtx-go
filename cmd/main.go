@@ -86,8 +86,8 @@ func handleCommand(command string, wsjtxServer wsjtx.Server) {
 		err = wsjtxServer.Heartbeat(wsjtx.HeartbeatMessage{
 			Id:        "wsjtx-go",
 			MaxSchema: 2,
-			Version:   "0.3.1",
-			Revision:  "e0d45c929",
+			Version:   Version,
+			Revision:  GitCommit,
 		})
 
 	case "clear":
