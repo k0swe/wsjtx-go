@@ -29,6 +29,7 @@ type Server struct {
 	listening   bool
 }
 
+//nolint:staticcheck // ST1012: exported name kept for API stability (published v4 module)
 var NotConnectedError = fmt.Errorf("haven't heard from wsjtx yet, don't know where to send commands")
 
 // MakeServer creates a multicast UDP connection to communicate with WSJT-X on the default address

@@ -17,7 +17,10 @@ type parser struct {
 	cursor int
 }
 
+//nolint:staticcheck // ST1012: exported name kept for API stability (published v4 module)
 var ParseError = errors.New("parse error")
+
+//nolint:staticcheck // ST1012: name kept alongside exported ParseError for consistency
 var notEnoughBytes = fmt.Errorf("%w: fewer bytes than expected, maybe an older version of WSJTX", ParseError)
 
 // Parse messages following the interface laid out in
@@ -115,8 +118,8 @@ func (p *parser) checkParse(message interface{}) error {
 func (p *parser) parseHeartbeat() (HeartbeatMessage, error) {
 	var err error
 	heartbeatMessage := HeartbeatMessage{}
-	heartbeatMessage.Id, err = p.parseUtf8()
-	heartbeatMessage.MaxSchema, err = p.parseUint32()
+	heartbeatMessage.Id, _ = p.parseUtf8()
+	heartbeatMessage.MaxSchema, _ = p.parseUint32()
 	heartbeatMessage.Version, err = p.parseUtf8()
 
 	// JTDX Packet
@@ -130,22 +133,22 @@ func (p *parser) parseHeartbeat() (HeartbeatMessage, error) {
 func (p *parser) parseStatus() (StatusMessage, error) {
 	var err error
 	statusMessage := StatusMessage{}
-	statusMessage.Id, err = p.parseUtf8()
-	statusMessage.DialFrequency, err = p.parseUint64()
-	statusMessage.Mode, err = p.parseUtf8()
-	statusMessage.DxCall, err = p.parseUtf8()
-	statusMessage.Report, err = p.parseUtf8()
-	statusMessage.TxMode, err = p.parseUtf8()
-	statusMessage.TxEnabled, err = p.parseBool()
-	statusMessage.Transmitting, err = p.parseBool()
-	statusMessage.Decoding, err = p.parseBool()
-	statusMessage.RxDF, err = p.parseUint32()
-	statusMessage.TxDF, err = p.parseUint32()
-	statusMessage.DeCall, err = p.parseUtf8()
-	statusMessage.DeGrid, err = p.parseUtf8()
-	statusMessage.DxGrid, err = p.parseUtf8()
-	statusMessage.TxWatchdog, err = p.parseBool()
-	statusMessage.SubMode, err = p.parseUtf8()
+	statusMessage.Id, _ = p.parseUtf8()
+	statusMessage.DialFrequency, _ = p.parseUint64()
+	statusMessage.Mode, _ = p.parseUtf8()
+	statusMessage.DxCall, _ = p.parseUtf8()
+	statusMessage.Report, _ = p.parseUtf8()
+	statusMessage.TxMode, _ = p.parseUtf8()
+	statusMessage.TxEnabled, _ = p.parseBool()
+	statusMessage.Transmitting, _ = p.parseBool()
+	statusMessage.Decoding, _ = p.parseBool()
+	statusMessage.RxDF, _ = p.parseUint32()
+	statusMessage.TxDF, _ = p.parseUint32()
+	statusMessage.DeCall, _ = p.parseUtf8()
+	statusMessage.DeGrid, _ = p.parseUtf8()
+	statusMessage.DxGrid, _ = p.parseUtf8()
+	statusMessage.TxWatchdog, _ = p.parseBool()
+	statusMessage.SubMode, _ = p.parseUtf8()
 	statusMessage.FastMode, err = p.parseBool()
 
 	// A JTDX Format packet (Tx first, bool)
@@ -153,10 +156,10 @@ func (p *parser) parseStatus() (StatusMessage, error) {
 		_, _ = p.parseBool()
 		return statusMessage, err
 	}
-	statusMessage.SpecialOperationMode, err = p.parseUint8()
-	statusMessage.FrequencyTolerance, err = p.parseUint32()
-	statusMessage.TRPeriod, err = p.parseUint32()
-	statusMessage.ConfigurationName, err = p.parseUtf8()
+	statusMessage.SpecialOperationMode, _ = p.parseUint8()
+	statusMessage.FrequencyTolerance, _ = p.parseUint32()
+	statusMessage.TRPeriod, _ = p.parseUint32()
+	statusMessage.ConfigurationName, _ = p.parseUtf8()
 	statusMessage.TxMessage, err = p.parseUtf8()
 	return statusMessage, err
 }
@@ -164,15 +167,15 @@ func (p *parser) parseStatus() (StatusMessage, error) {
 func (p *parser) parseDecode() (DecodeMessage, error) {
 	var err error
 	decodeMessage := DecodeMessage{}
-	decodeMessage.Id, err = p.parseUtf8()
-	decodeMessage.New, err = p.parseBool()
-	decodeMessage.Time, err = p.parseUint32()
-	decodeMessage.Snr, err = p.parseInt32()
-	decodeMessage.DeltaTimeSec, err = p.parseFloat64()
-	decodeMessage.DeltaFrequencyHz, err = p.parseUint32()
-	decodeMessage.Mode, err = p.parseUtf8()
-	decodeMessage.Message, err = p.parseUtf8()
-	decodeMessage.LowConfidence, err = p.parseBool()
+	decodeMessage.Id, _ = p.parseUtf8()
+	decodeMessage.New, _ = p.parseBool()
+	decodeMessage.Time, _ = p.parseUint32()
+	decodeMessage.Snr, _ = p.parseInt32()
+	decodeMessage.DeltaTimeSec, _ = p.parseFloat64()
+	decodeMessage.DeltaFrequencyHz, _ = p.parseUint32()
+	decodeMessage.Mode, _ = p.parseUtf8()
+	decodeMessage.Message, _ = p.parseUtf8()
+	decodeMessage.LowConfidence, _ = p.parseBool()
 	decodeMessage.OffAir, err = p.parseBool()
 	return decodeMessage, err
 }
@@ -187,27 +190,27 @@ func (p *parser) parseClear() (ClearMessage, error) {
 func (p *parser) parseQsoLogged() (QsoLoggedMessage, error) {
 	var err error
 	qsoLoggedMessage := QsoLoggedMessage{}
-	qsoLoggedMessage.Id, err = p.parseUtf8()
-	qsoLoggedMessage.DateTimeOff, err = p.parseQDateTime()
-	qsoLoggedMessage.DxCall, err = p.parseUtf8()
-	qsoLoggedMessage.DxGrid, err = p.parseUtf8()
-	qsoLoggedMessage.TxFrequency, err = p.parseUint64()
-	qsoLoggedMessage.Mode, err = p.parseUtf8()
-	qsoLoggedMessage.ReportSent, err = p.parseUtf8()
-	qsoLoggedMessage.ReportReceived, err = p.parseUtf8()
-	qsoLoggedMessage.TxPower, err = p.parseUtf8()
-	qsoLoggedMessage.Comments, err = p.parseUtf8()
-	qsoLoggedMessage.Name, err = p.parseUtf8()
-	qsoLoggedMessage.DateTimeOn, err = p.parseQDateTime()
-	qsoLoggedMessage.OperatorCall, err = p.parseUtf8()
-	qsoLoggedMessage.MyCall, err = p.parseUtf8()
+	qsoLoggedMessage.Id, _ = p.parseUtf8()
+	qsoLoggedMessage.DateTimeOff, _ = p.parseQDateTime()
+	qsoLoggedMessage.DxCall, _ = p.parseUtf8()
+	qsoLoggedMessage.DxGrid, _ = p.parseUtf8()
+	qsoLoggedMessage.TxFrequency, _ = p.parseUint64()
+	qsoLoggedMessage.Mode, _ = p.parseUtf8()
+	qsoLoggedMessage.ReportSent, _ = p.parseUtf8()
+	qsoLoggedMessage.ReportReceived, _ = p.parseUtf8()
+	qsoLoggedMessage.TxPower, _ = p.parseUtf8()
+	qsoLoggedMessage.Comments, _ = p.parseUtf8()
+	qsoLoggedMessage.Name, _ = p.parseUtf8()
+	qsoLoggedMessage.DateTimeOn, _ = p.parseQDateTime()
+	qsoLoggedMessage.OperatorCall, _ = p.parseUtf8()
+	qsoLoggedMessage.MyCall, _ = p.parseUtf8()
 	qsoLoggedMessage.MyGrid, err = p.parseUtf8()
 
 	// JTDX Packet
 	if !p.isDataAvailable() {
 		return qsoLoggedMessage, err
 	}
-	qsoLoggedMessage.ExchangeSent, err = p.parseUtf8()
+	qsoLoggedMessage.ExchangeSent, _ = p.parseUtf8()
 	qsoLoggedMessage.ExchangeReceived, err = p.parseUtf8()
 
 	// Older WSJT-X packet doesn't have Propagation Mode
@@ -227,15 +230,15 @@ func (p *parser) parseClose() (CloseMessage, error) {
 func (p *parser) parseWsprDecode() (WSPRDecodeMessage, error) {
 	var err error
 	wsprDecodeMessage := WSPRDecodeMessage{}
-	wsprDecodeMessage.Id, err = p.parseUtf8()
-	wsprDecodeMessage.New, err = p.parseBool()
-	wsprDecodeMessage.Time, err = p.parseUint32()
-	wsprDecodeMessage.Snr, err = p.parseInt32()
-	wsprDecodeMessage.DeltaTime, err = p.parseFloat64()
-	wsprDecodeMessage.Frequency, err = p.parseUint64()
-	wsprDecodeMessage.Drift, err = p.parseInt32()
-	wsprDecodeMessage.Callsign, err = p.parseUtf8()
-	wsprDecodeMessage.Grid, err = p.parseUtf8()
+	wsprDecodeMessage.Id, _ = p.parseUtf8()
+	wsprDecodeMessage.New, _ = p.parseBool()
+	wsprDecodeMessage.Time, _ = p.parseUint32()
+	wsprDecodeMessage.Snr, _ = p.parseInt32()
+	wsprDecodeMessage.DeltaTime, _ = p.parseFloat64()
+	wsprDecodeMessage.Frequency, _ = p.parseUint64()
+	wsprDecodeMessage.Drift, _ = p.parseInt32()
+	wsprDecodeMessage.Callsign, _ = p.parseUtf8()
+	wsprDecodeMessage.Grid, _ = p.parseUtf8()
 	wsprDecodeMessage.Power, err = p.parseInt32()
 
 	// JTDX Packet
@@ -249,7 +252,7 @@ func (p *parser) parseWsprDecode() (WSPRDecodeMessage, error) {
 func (p *parser) parseLoggedAdif() (LoggedAdifMessage, error) {
 	var err error
 	loggedAdifMessage := LoggedAdifMessage{}
-	loggedAdifMessage.Id, err = p.parseUtf8()
+	loggedAdifMessage.Id, _ = p.parseUtf8()
 	loggedAdifMessage.Adif, err = p.parseUtf8()
 	return loggedAdifMessage, err
 }
@@ -329,9 +332,9 @@ func (p *parser) parseBool() (bool, error) {
 }
 
 func (p *parser) parseQDateTime() (time.Time, error) {
-	julianDay, err := p.parseUint64()
+	julianDay, _ := p.parseUint64()
 	year, month, day := jdn.FromNumber(int(julianDay))
-	msMid, err := p.parseUint32()
+	msMid, _ := p.parseUint32()
 	msSinceMidnight := int(msMid)
 	hour := msSinceMidnight / 3600000
 	msSinceMidnight -= hour * 3600000
