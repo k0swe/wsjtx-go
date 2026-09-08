@@ -1,5 +1,4 @@
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/k0swe/wsjtx-go/v4)](https://pkg.go.dev/github.com/k0swe/wsjtx-go/v4)
-[![Go Report Card](https://goreportcard.com/badge/github.com/k0swe/wsjtx-go/v4)](https://goreportcard.com/report/github.com/k0swe/wsjtx-go/v4)
 [![Test](https://github.com/k0swe/wsjtx-go/actions/workflows/test.yml/badge.svg?branch=v4)](https://github.com/k0swe/wsjtx-go/actions/workflows/test.yml)
 
 # wsjtx-go
